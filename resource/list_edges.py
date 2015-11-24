@@ -16,6 +16,8 @@ def proc_line(line, type):
     exon_num = int(F[8])
     gene = F[1]
     symbol = F[12]
+
+    chr = chr.replace("chr", "")
     
     for i in range(1, exon_num):
         

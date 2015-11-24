@@ -1,0 +1,28 @@
+#! /usr/bin/env python
+
+from genomon_intron_retention.run import *
+import argparse
+
+parser = argparse.ArgumentParser(prog = "genomon_intron_retention")
+
+parser.add_argument("--version", action = "version", version = "genomon_intron_retention-0.1.0")
+
+parser.add_argument("bam_file", metavar = "sequence.bam", default = None, type = str,
+                    help = "the path to the bam file")
+
+parser.add_argument("output_prefix", metavar = "output_prefix", default = None, type = str, 
+                    help = "the prefix of the output")
+
+parser.add_argument("annotation_dir", metavar = "annotation_dir", default = None, type = str,
+                    help = "the path to annotation directory")
+
+parser.add_argument("bedtools_path", metavar = "bedtools_path", default = None, type = str, 
+                    help = "the path to bedtools")
+
+parser.add_argument("-q", metavar = "mapping_qual_thres", default='20', type=int,
+                    help = "threshold for mapping quality for calculating base counts")
+
+args = parser.parse_args()
+
+main(args)
+
