@@ -1,15 +1,14 @@
 #! /bin/sh
 
-echo "sh download.sh"
-sh download.sh
+# rm -rf refGene.txt.gz*
+# rm -rf ensGene.txt.gz*
 
-echo "perl listEdges.pl > edge.bed"
-perl listEdges.pl > edge.bed
+# wget http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/refGene.txt.gz
+# wget http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/ensGene.txt.gz
 
-echo "perl brodenJunc.pl edge.bed > edge_broden.bed"
-perl brodenJunc.pl edge.bed > edge_broden.bed
+# echo "python list_edges.py | sort -k1,1 -k2,2 -k3,3 > edge.bed"
+# python list_edges.py | sort -k1,1 -k2,2 -k3,3 > edge.bed
 
-
-# rm -rf exon.bed
-# rm -rf exon.proc.tmp.fasta
+echo "python broaden_junc.py edge.bed 5 | sort -k1,1 -k2,2 -k3,3 > edge_broaden.bed"
+python broaden_junc.py edge.bed 5 | sort -k1,1 -k2,2 -k3,3 > edge_broaden.bed
 
