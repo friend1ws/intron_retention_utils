@@ -16,8 +16,8 @@ bedtools (>= 2.20.0)
 
 ## Install 
 ```
-git clone https://github.com/friend1ws/genomonSV.git
-cd genomonSV
+git clone  https://github.com/Genomon-Project/GenomonIntronRetention.git
+cd GenomonIntronRetention
 python setup.py build
 python setup.py install
 ```
@@ -48,5 +48,4 @@ genomon_intron_retention [-h] [--version] [-q mapping_qual_thres] sequence.bam o
 1. direction of junction
 1. the number of read at the junction
 1. the number of read identified as intron retention
-1. 
-script for extracting intron retention events
+
