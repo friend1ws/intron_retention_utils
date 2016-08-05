@@ -49,10 +49,10 @@ def main(args):
     utils.summarize_edge(output_prefix + ".edge.bed", output_prefix + ".edge_broaden.bed", output_prefix + ".intron.bed", 5)
 
 
-    """
     subprocess.call(["rm", "-rf", output_prefix + ".filt.bam"])
     subprocess.call(["rm", "-rf", output_prefix + ".filt.bed12"])
     subprocess.call(["rm", "-rf", output_prefix + ".exon.bed"])
     subprocess.call(["rm", "-rf", output_prefix + ".exon2base.txt"])
-    """
+
+
 

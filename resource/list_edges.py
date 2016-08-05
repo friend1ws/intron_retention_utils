@@ -50,7 +50,7 @@ with gzip.open("refGene.txt.gz", 'r') as hin:
         num = num + 1
         if num % 1000 == 0: print >> sys.stderr, str(num) + " genes completed."
 
-
+"""
 print >> sys.stderr, "Start reading ensGene.txt.gz"
 num = 0
 with gzip.open("ensGene.txt.gz", 'r') as hin:
@@ -58,7 +58,7 @@ with gzip.open("ensGene.txt.gz", 'r') as hin:
         proc_line(line, "ensGene")
         num = num + 1
         if num % 1000 == 0: print >> sys.stderr, str(num) + " genes completed."
-
+"""
 
 for junction in sorted(junction2annot):
     junc_info = junction.split('\t')
