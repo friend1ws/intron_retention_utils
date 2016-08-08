@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 import sys, os, subprocess
-import utils
+import utils, intron_db, mutation
 
 def simple_count_main(args):
 
@@ -62,6 +62,13 @@ def allele_count_main(args):
     if output_dir != "" and not os.path.exists(output_dir):
        os.makedirs(output_dir)
 
-    utils.generate_intron_retention_list(args.ref_gene_file, args.output_file + ".intron_retention_list.bed", args.donor_size, args.acceptor_size)
+    intron_db.generate_intron_retention_list(args.ref_gene_file, args.output_file + ".intron_retention_list.bed", 
+                                             args.donor_size, args.acceptor_size, args.chr_name_list)
 
+    mutation.anno2bed(args.mutation_file, args.output_file + ".mutation_list.bed")
+
+    hout = open(args.output_file + ".mutation_list.overlap.bed", 'w')
+    subprocess.call(["bedtools", "intersect", "-a", args.output_file + ".intron_retention_list.bed",
+                     "-b", args.output_file + ".mutation_list.bed", "-wa", "-wb"], stdout = hout)
+    hout.close()
 

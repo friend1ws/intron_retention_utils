@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-import re, gzip, subprocess
+import re, gzip
 import pysam
 
 def filterImproper(input_bam, output_bam, mapq_thres):
