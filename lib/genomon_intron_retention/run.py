@@ -3,7 +3,7 @@
 import sys, os, subprocess
 import utils
 
-def main(args):
+def simple_count_main(args):
 
     input_bam = args.bam_file
     output_prefix = args.output_prefix
@@ -54,5 +54,14 @@ def main(args):
     subprocess.call(["rm", "-rf", output_prefix + ".exon.bed"])
     subprocess.call(["rm", "-rf", output_prefix + ".exon2base.txt"])
 
+
+
+def allele_count_main(args):
+
+    output_dir = os.path.dirname(args.output_file)
+    if output_dir != "" and not os.path.exists(output_dir):
+       os.makedirs(output_dir)
+
+    utils.generate_intron_retention_list(args.ref_gene_file, args.output_file + ".intron_retention_list.bed", args.donor_size, args.acceptor_size)
 
 
