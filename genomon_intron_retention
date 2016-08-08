@@ -47,6 +47,9 @@ allele_count.add_argument("mutation_file", metavar = "mutation.txt", default = N
 allele_count.add_argument("output_file", metavar = "output.txt", default = None, type = str,
                           help = "the path to output file")
 
+allele_count.add_argument("reference", metavar = "reference.fa", default = None, type = str,
+                          help = "the path to the reference genome file")
+
 allele_count.add_argument("ref_gene_file", metavar = "refGene.txt.gz", type = str,
                           help = "refGene annotation file downloadable from UCSC site")
 
@@ -59,6 +62,9 @@ allele_count.add_argument("--acceptor_size", metavar = "acceptor_size", default 
 allele_count.add_argument("--chr_name_list", metavar = "chr_name_list.txt", default = None, type = str,
                           help = "tab delimited chr name correspondance table (e.g., 1st column: UCSC names, 2nd column: GRCh names), \
                           if need to use other than UCSC chr names")
+
+allele_count.add_argument("--template_size", metavar = "check_size", default = 10, type = int,
+                          help = "the template sequence sizes for checking intron retention (default: %(default)s)")
 
 allele_count.set_defaults(func = allele_count_main)
 

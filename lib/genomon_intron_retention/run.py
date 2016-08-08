@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 import sys, os, subprocess
-import utils, intron_db, mutation
+import utils, intron_db, mutation, allele_count
 
 def simple_count_main(args):
 
@@ -62,13 +62,28 @@ def allele_count_main(args):
     if output_dir != "" and not os.path.exists(output_dir):
        os.makedirs(output_dir)
 
+    """
     intron_db.generate_intron_retention_list(args.ref_gene_file, args.output_file + ".intron_retention_list.bed", 
                                              args.donor_size, args.acceptor_size, args.chr_name_list)
 
     mutation.anno2bed(args.mutation_file, args.output_file + ".mutation_list.bed")
 
     hout = open(args.output_file + ".mutation_list.overlap.bed", 'w')
-    subprocess.call(["bedtools", "intersect", "-a", args.output_file + ".intron_retention_list.bed",
-                     "-b", args.output_file + ".mutation_list.bed", "-wa", "-wb"], stdout = hout)
+    subprocess.call(["bedtools", "intersect", "-a", args.output_file + ".mutation_list.bed",
+                     "-b", args.output_file + ".intron_retention_list.bed", "-wa", "-wb"], stdout = hout)
     hout.close()
+    """
+    
+    cnum = 0
+    with open(args.output_file + ".mutation_list.overlap.bed", 'r') as hin:
+        for line in hin:
+            F = line.rstrip('\n').split('\t')
+            mut_chr, mut_start, mut_end, mut_ref, mut_alt = F[0], int(F[1]) + 1, int(F[2]), F[3], F[4]
+            motif_chr, motif_start, motif_end, motif_type, motif_strand, junc_list = F[5], int(F[6]) + 1, int(F[7]) + 1, F[9], F[10], F[11]
 
+            allele_count.generate_template_seq(args.output_file + ".tmp.check_seq.fa" + str(cnum),
+                                               args.reference, mut_chr, mut_start, mut_end, mut_ref, mut_alt,
+                                               motif_chr, motif_start, motif_end, motif_type, motif_strand,
+                                               junc_list, args.donor_size, args.acceptor_size, args.template_size)
+
+            cnum = cnum + 1
