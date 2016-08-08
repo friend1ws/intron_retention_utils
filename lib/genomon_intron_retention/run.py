@@ -81,9 +81,14 @@ def allele_count_main(args):
             mut_chr, mut_start, mut_end, mut_ref, mut_alt = F[0], int(F[1]) + 1, int(F[2]), F[3], F[4]
             motif_chr, motif_start, motif_end, motif_type, motif_strand, junc_list = F[5], int(F[6]) + 1, int(F[7]) + 1, F[9], F[10], F[11]
 
-            allele_count.generate_template_seq(args.output_file + ".tmp.check_seq.fa" + str(cnum),
+            allele_count.generate_template_seq(args.output_file + ".tmp.template_seq.fa" + str(cnum),
                                                args.reference, mut_chr, mut_start, mut_end, mut_ref, mut_alt,
                                                motif_chr, motif_start, motif_end, motif_type, motif_strand,
                                                junc_list, args.donor_size, args.acceptor_size, args.template_size)
 
+            allele_count.extract_read_around_boundary(args.bam_file, args.output_file + ".tmp.read_seq.fa" + str(cnum),
+                                                      args.reference, motif_chr, motif_start, motif_end, args.read_search_margin)
+   
             cnum = cnum + 1
+
+

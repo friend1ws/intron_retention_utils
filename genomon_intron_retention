@@ -66,6 +66,9 @@ allele_count.add_argument("--chr_name_list", metavar = "chr_name_list.txt", defa
 allele_count.add_argument("--template_size", metavar = "check_size", default = 10, type = int,
                           help = "the template sequence sizes for checking intron retention (default: %(default)s)")
 
+allele_count.add_argument("--read_search_margin", metavar = "read_search_margin", default = 10, type = int,
+                          help = "margin size for extracting short reads around exon-intron junctions (default: %(default)s)")
+
 allele_count.set_defaults(func = allele_count_main)
 
 args = parser.parse_args()

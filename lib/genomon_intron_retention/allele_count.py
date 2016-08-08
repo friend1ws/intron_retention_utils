@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-import sys, re
+import sys, re, pysam
 import my_seq
 
 mut_seq_margin = 50
@@ -147,4 +147,29 @@ def generate_template_seq(output_file, reference, mut_chr, mut_start, mut_end, m
     hout.close()
  
 
-     
+    
+def extract_read_around_boundary(bam_file, output_file, reference, motif_chr, motif_start, motif_end, read_search_margin):
+
+    bamfile = pysam.Samfile(bam_file, 'rb')
+    hout = open(output_file, 'w') 
+    for read in bamfile.fetch(motif_chr, max(0, motif_start - read_search_margin), motif_end + read_search_margin):
+
+        # get the flag information
+        flags = format(int(read.flag), "#014b")[:1:-1]
+
+        # skip unmapped read 
+        if flags[2] == "1" or flags[3] == "1": continue 
+
+        # skip supplementary alignment
+        if flags[8] == "1" or flags[11] == "1": continue
+
+        # skip duplicated reads
+        if flags[10] == "1": continue
+
+        read_id = read.qname + '/1' if flags[6] == '1' else read.qname + '/2'
+        
+        print >> hout, '>' + read_id + '\n' + read.seq
+
+    bamfile.close()
+    hout.close()
+ 
