@@ -24,18 +24,14 @@ simple_count.add_argument("output_file", metavar = "output_file", default = None
 simple_count.add_argument("ref_gene_file", metavar = "refGene.txt.gz", type = str,
                           help = "refGene annotation file downloadable from UCSC site")
 
-# simple_count.add_argument("annotation_dir", metavar = "annotation_dir", default = None, type = str,
-#                           help = "the path to annotation directory")
-
-# simple_count.add_argument("bedtools_path", metavar = "bedtools_path", default = None, type = str, 
-#                           help = "the path to bedtools")
-
 simple_count.add_argument("-q", metavar = "mapping_qual_thres", default='20', type=int,
                           help = "threshold for mapping quality for calculating base counts")
 
 simple_count.add_argument("--chr_name_list", metavar = "chr_name_list.txt", default = None, type = str,
                           help = "tab delimited chr name correspondance table (e.g., 1st column: UCSC names, 2nd column: GRCh names), \
                           if need to use other than UCSC chr names")
+
+simple_count.add_argument("--debug", default = False, action = 'store_true', help = "keep intermediate files")
 
 simple_count.set_defaults(func = simple_count_main)
 

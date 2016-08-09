@@ -62,13 +62,14 @@ def simple_count_main(args):
     subprocess.call(["sort", "-k1,1", "-k2,2n", "-k3,3n", args.output_file + ".unsorted"], stdout = hout)
     hout.close()
 
-    subprocess.call(["rm", "-rf", args.output_file + ".filt.bam"])
-    subprocess.call(["rm", "-rf", args.output_file + ".filt.bed12"])
-    subprocess.call(["rm", "-rf", args.output_file + ".refGene.edge.bed"])
-    subprocess.call(["rm", "-rf", args.output_file + ".refGene.edge_broaden.bed"])
-    subprocess.call(["rm", "-rf", args.output_file + ".edge.bed"])
-    subprocess.call(["rm", "-rf", args.output_file + ".edge_broaden.bed"])
-    subprocess.call(["rm", "-rf", args.output_file + ".unsorted"])
+    if not args.debug:
+        subprocess.call(["rm", "-rf", args.output_file + ".filt.bam"])
+        subprocess.call(["rm", "-rf", args.output_file + ".filt.bed12"])
+        subprocess.call(["rm", "-rf", args.output_file + ".refGene.edge.bed"])
+        subprocess.call(["rm", "-rf", args.output_file + ".refGene.edge_broaden.bed"])
+        subprocess.call(["rm", "-rf", args.output_file + ".edge.bed"])
+        subprocess.call(["rm", "-rf", args.output_file + ".edge_broaden.bed"])
+        subprocess.call(["rm", "-rf", args.output_file + ".unsorted"])
 
 
 def allele_count_main(args):

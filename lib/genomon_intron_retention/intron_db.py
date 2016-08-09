@@ -69,7 +69,7 @@ def broaden_edge(input_file, output_file, margin):
         for line in hin:
             F = line.rstrip('\n').split('\t')
 
-            if F[5] == '+':
+            if (F[4] == "donor" and F[5] == '+') or (F[4] == "acceptor" and F[5] == '-'):
                 print >> hout, F[0] + '\t' + str(int(F[1]) - margin + 1) + '\t' + str(int(F[2]) + margin) + '\t' + '\t'.join(F[3:])
             else:
                 print >> hout, F[0] + '\t' + str(int(F[1]) - margin) + '\t' + str(int(F[2]) + margin - 1) + '\t' + '\t'.join(F[3:])
