@@ -1,15 +1,11 @@
 #! /usr/bin/env python
 
 import sys, os, subprocess
-import utils, intron_db
+import intron_db
 
 def simple_count_main(args):
 
-    # input_bam = args.bam_file
-    # output_prefix = args.output_prefix
-    # annotation_dir = args.annotation_dir
-    # bedtools_path = args.bedtools_path
-    # mapq_thres = args.q
+    import simple_count
 
     output_dir = os.path.dirname(args.output_file)
     if output_dir != "" and not os.path.exists(output_dir):
@@ -22,7 +18,7 @@ def simple_count_main(args):
 
     intron_db.broaden_edge(args.output_file + ".refGene.edge.bed", args.output_file + ".refGene.edge_broaden.bed", 5)
 
-    utils.filterImproper(args.bam_file, args.output_file + ".filt.bam", args.q)
+    simple_count.filterImproper(args.bam_file, args.output_file + ".filt.bam", args.q)
 
 
     hout = open(args.output_file + ".filt.bed12", 'w')
@@ -53,10 +49,16 @@ def simple_count_main(args):
         print >> sys.stderr, "error in generating edge_broaden.bed"
         sys.exit(1)
 
-    utils.summarize_edge(args.output_file + ".edge.bed", args.output_file + ".edge_broaden.bed", args.output_file + ".unsorted", 5)
+    simple_count.summarize_edge(args.output_file + ".edge.bed", args.output_file + ".edge_broaden.bed", args.output_file + ".unsorted", 5)
+
+    # print header
+    hout = open(args.output_file, 'w')
+    print >> hout, '\t'.join(["Chr", "Boundary_Pos", "Gene_Symbol", "Motif_Type", "Strand", 
+                              "Junction_List", "Gene_ID_List", "Exon_Num_List", "Edge_Read_Count", "Intron_Retention_Read_Count"])
+    hout.close()
 
     # sort the result
-    hout = open(args.output_file, 'w')
+    hout = open(args.output_file, 'a')
     subprocess.call(["sort", "-k1,1", "-k2,2n", "-k3,3n", args.output_file + ".unsorted"], stdout = hout)
     hout.close()
 
