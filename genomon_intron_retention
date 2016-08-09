@@ -24,8 +24,8 @@ simple_count.add_argument("output_prefix", metavar = "output_prefix", default = 
 simple_count.add_argument("annotation_dir", metavar = "annotation_dir", default = None, type = str,
                           help = "the path to annotation directory")
 
-simple_count.add_argument("bedtools_path", metavar = "bedtools_path", default = None, type = str, 
-                          help = "the path to bedtools")
+# simple_count.add_argument("bedtools_path", metavar = "bedtools_path", default = None, type = str, 
+#                           help = "the path to bedtools")
 
 simple_count.add_argument("-q", metavar = "mapping_qual_thres", default='20', type=int,
                           help = "threshold for mapping quality for calculating base counts")
