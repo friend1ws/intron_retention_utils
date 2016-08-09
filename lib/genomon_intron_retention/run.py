@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 import sys, os, subprocess
-import utils, intron_db, mutation, allele_count
+import utils, intron_db, mutation, allele_count, pyssw
 
 def simple_count_main(args):
 
@@ -80,6 +80,7 @@ def allele_count_main(args):
             F = line.rstrip('\n').split('\t')
             mut_chr, mut_start, mut_end, mut_ref, mut_alt = F[0], int(F[1]) + 1, int(F[2]), F[3], F[4]
             motif_chr, motif_start, motif_end, motif_type, motif_strand, junc_list = F[5], int(F[6]) + 1, int(F[7]) + 1, F[9], F[10], F[11]
+            motif_gene = F[8]
 
             allele_count.generate_template_seq(args.output_file + ".tmp.template_seq.fa" + str(cnum),
                                                args.reference, mut_chr, mut_start, mut_end, mut_ref, mut_alt,
@@ -88,7 +89,15 @@ def allele_count_main(args):
 
             allele_count.extract_read_around_boundary(args.bam_file, args.output_file + ".tmp.read_seq.fa" + str(cnum),
                                                       args.reference, motif_chr, motif_start, motif_end, args.read_search_margin)
-   
+
+            type2count = pyssw.main2(args.output_file + ".tmp.read_seq.fa" + str(cnum), args.output_file + ".tmp.template_seq.fa" + str(cnum), 
+                                     4 * args.template_size - args.template_score_margin)
+
+            print '\t'.join([motif_gene, mut_chr, str(mut_start), str(mut_end), mut_ref, mut_alt, 
+                             motif_chr, str(motif_start), str(motif_end), motif_type, motif_strand,
+                             str(type2count["splice_junction_negative"]), str(type2count["splice_junction_positive"]),
+                             str(type2count["intron_retention_negative"]), str(type2count["intron_retention_positive"])])
+                  
             cnum = cnum + 1
 
 
