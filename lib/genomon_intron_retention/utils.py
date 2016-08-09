@@ -47,7 +47,7 @@ def summarize_edge(edge_bed, edge_broaden_bed, output_file, margin):
         for line in hin:
             F = line.rstrip('\n').split('\t')
             if F[len(F) - 1] != "1": continue
-            key = '\t'.join(F[12:18])
+            key = '\t'.join(F[12:(len(F) - 1)])
             if key not in edge2count: edge2count[key] = 0
             edge2count[key] = edge2count[key] + 1
 
@@ -63,7 +63,7 @@ def summarize_edge(edge_bed, edge_broaden_bed, output_file, margin):
                 F[13] = str(int(F[13]) + margin)
                 F[14] = str(int(F[14]) - margin + 1)
 
-            key = '\t'.join(F[12:18])
+            key = '\t'.join(F[12:(len(F) - 1)])
             if key not in edge_broaden2count: edge_broaden2count[key] = 0
             edge_broaden2count[key] = edge_broaden2count[key] + 1
 

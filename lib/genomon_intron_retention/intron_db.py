@@ -2,6 +2,82 @@
 
 import gzip, subprocess
 
+def generate_edge_bed(ref_gene_file, output_file, chr_name_list):
+
+    ucsc2new_chr = {}
+    if chr_name_list is not None:
+        with open(chr_name_list, 'r') as hin:
+            for line in hin:
+                F = line.rstrip('\n').split('\t')
+                ucsc2new_chr[F[0]] = F[1]
+
+    junction2annot = {}
+    ##########
+    # function for processing each line of refGene.txt.gz
+    def proc_line(line, type):
+
+        F  = line.rstrip('\n').split('\t')
+        
+        chr = ucsc2new_chr[F[2]] if F[2] in ucsc2new_chr else F[2]
+        starts = F[9].split(',')
+        ends = F[10].split(',')
+        strand = F[3]
+        exon_num = int(F[8])
+        gene = F[1]
+        symbol = F[12]
+
+        chr = chr.replace("chr", "")
+    
+        for i in range(1, exon_num):
+            
+            key = chr + '\t' + starts[i] + '\t' + str(int(starts[i]) + 1) + '\t' + '-'
+            annot = symbol + '(' + gene + ').' if type == "refGene" else gene
+            annot = annot + (str(i) + ".start" if strand == '+' else str(exon_num - i) + ".end")
+            if key in junction2annot: 
+                junction2annot[key] = junction2annot[key] + ',' + annot
+            else:
+                junction2annot[key] = annot
+        
+    
+        for i in range(0, exon_num - 1):
+            
+            key = chr + '\t' + str(int(ends[i]) - 1) + '\t' + ends[i] + '\t' + '+' 
+            annot = symbol + '(' + gene + ').' if type == "refGene" else gene
+            annot = symbol + '(' + gene + ').' + (str(i) + ".end" if strand == '+' else str(exon_num - i - 1) + ".start")
+            
+            if key in junction2annot: 
+                junction2annot[key] = junction2annot[key] + ',' + annot
+            else:
+                junction2annot[key] = annot
+    ##########
+
+    with gzip.open(ref_gene_file, 'r') as hin:
+        for line in hin:
+            proc_line(line, "refGene")
+
+    hout = open(output_file, 'w')
+    for junction in sorted(junction2annot):
+        junc_info = junction.split('\t')
+        print >> hout, '\t'.join(junc_info[0:3]) + '\t' + junction2annot[junction] + '\t' + '0' + '\t' + junc_info[3]
+    hout.close()
+
+
+def broaden_edge(input_file, output_file, margin):
+
+    hout = open(output_file, 'w')
+    with open(input_file, 'r') as hin:
+        for line in hin:
+            F = line.rstrip('\n').split('\t')
+
+            if F[5] == '+':
+                print >> hout, F[0] + '\t' + str(int(F[1]) - margin + 1) + '\t' + str(int(F[2]) + margin) + '\t' + '\t'.join(F[3:])
+            else:
+                print >> hout, F[0] + '\t' + str(int(F[1]) - margin) + '\t' + str(int(F[2]) + margin - 1) + '\t' + '\t'.join(F[3:])
+
+    hout.close()
+
+
+
 def generate_intron_retention_list(ref_gene_file, output_file, donor_size, acceptor_size, chr_name_list):
 
     ucsc2new_chr = {}

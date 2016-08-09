@@ -5,22 +5,28 @@ import utils, intron_db
 
 def simple_count_main(args):
 
-    input_bam = args.bam_file
-    output_prefix = args.output_prefix
-    annotation_dir = args.annotation_dir
+    # input_bam = args.bam_file
+    # output_prefix = args.output_prefix
+    # annotation_dir = args.annotation_dir
     # bedtools_path = args.bedtools_path
-    mapq_thres = args.q
+    # mapq_thres = args.q
 
-    output_prefix_dir = os.path.dirname(output_prefix)
-    if output_prefix_dir != "" and not os.path.exists(output_prefix_dir):
-       os.makedirs(output_prefix_dir)
-
-
-    utils.filterImproper(input_bam, output_prefix + ".filt.bam", mapq_thres)
+    output_dir = os.path.dirname(args.output_file)
+    if output_dir != "" and not os.path.exists(output_dir):
+       os.makedirs(output_dir)
 
 
-    hout = open(output_prefix + ".filt.bed12", 'w')
-    s_ret = subprocess.call(["bedtools", "bamtobed", "-bed12", "-i", output_prefix + ".filt.bam"], stdout = hout)
+    # intron_db.generate_edge_bed(args.ref_gene_file, output_prefix + ".refGene.edge.bed", args.chr_name_list)
+    intron_db.generate_intron_retention_list(args.ref_gene_file, args.output_file + ".refGene.edge.bed", 
+                                             "1,0", "0,1", args.chr_name_list)
+
+    intron_db.broaden_edge(args.output_file + ".refGene.edge.bed", args.output_file + ".refGene.edge_broaden.bed", 5)
+
+    utils.filterImproper(args.bam_file, args.output_file + ".filt.bam", args.q)
+
+
+    hout = open(args.output_file + ".filt.bed12", 'w')
+    s_ret = subprocess.call(["bedtools", "bamtobed", "-bed12", "-i", args.output_file + ".filt.bam"], stdout = hout)
     hout.close()
 
     if s_ret != 0:
@@ -28,9 +34,9 @@ def simple_count_main(args):
         sys.exit(1)
 
 
-    hout = open(output_prefix + ".edge.bed", 'w')
-    s_ret = subprocess.call(["bedtools", "intersect", "-a", output_prefix + ".filt.bed12", "-b", annotation_dir + "/edge.bed", 
-                     "-split", "-wao"], stdout = hout)
+    hout = open(args.output_file + ".edge.bed", 'w')
+    s_ret = subprocess.call(["bedtools", "intersect", "-a", args.output_file + ".filt.bed12", "-b", 
+                             args.output_file + ".refGene.edge.bed", "-split", "-wo"], stdout = hout) 
     hout.close()
 
     if s_ret != 0:
@@ -38,23 +44,29 @@ def simple_count_main(args):
         sys.exit(1)
 
 
-    hout = open(output_prefix + ".edge_broaden.bed", 'w')
-    s_ret = subprocess.call(["bedtools", "intersect", "-a", output_prefix + ".filt.bed12", "-b", annotation_dir + "/edge_broaden.bed", 
-                     "-split", "-wao"], stdout = hout)
+    hout = open(args.output_file + ".edge_broaden.bed", 'w')
+    s_ret = subprocess.call(["bedtools", "intersect", "-a", args.output_file + ".filt.bed12", "-b", 
+                             args.output_file + ".refGene.edge_broaden.bed", "-split", "-wo"], stdout = hout) 
     hout.close()
 
     if s_ret != 0:
         print >> sys.stderr, "error in generating edge_broaden.bed"
         sys.exit(1)
 
-    utils.summarize_edge(output_prefix + ".edge.bed", output_prefix + ".edge_broaden.bed", output_prefix + ".intron.bed", 5)
+    utils.summarize_edge(args.output_file + ".edge.bed", args.output_file + ".edge_broaden.bed", args.output_file + ".unsorted", 5)
 
+    # sort the result
+    hout = open(args.output_file, 'w')
+    subprocess.call(["sort", "-k1,1", "-k2,2n", "-k3,3n", args.output_file + ".unsorted"], stdout = hout)
+    hout.close()
 
-    subprocess.call(["rm", "-rf", output_prefix + ".filt.bam"])
-    subprocess.call(["rm", "-rf", output_prefix + ".filt.bed12"])
-    subprocess.call(["rm", "-rf", output_prefix + ".exon.bed"])
-    subprocess.call(["rm", "-rf", output_prefix + ".exon2base.txt"])
-
+    subprocess.call(["rm", "-rf", args.output_file + ".filt.bam"])
+    subprocess.call(["rm", "-rf", args.output_file + ".filt.bed12"])
+    subprocess.call(["rm", "-rf", args.output_file + ".refGene.edge.bed"])
+    subprocess.call(["rm", "-rf", args.output_file + ".refGene.edge_broaden.bed"])
+    subprocess.call(["rm", "-rf", args.output_file + ".edge.bed"])
+    subprocess.call(["rm", "-rf", args.output_file + ".edge_broaden.bed"])
+    subprocess.call(["rm", "-rf", args.output_file + ".unsorted"])
 
 
 def allele_count_main(args):

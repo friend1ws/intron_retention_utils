@@ -18,17 +18,24 @@ simple_count = subparsers.add_parser("simple_count",
 simple_count.add_argument("bam_file", metavar = "sequence.bam", default = None, type = str,
                           help = "the path to the bam file")
 
-simple_count.add_argument("output_prefix", metavar = "output_prefix", default = None, type = str, 
-                          help = "the prefix of the output")
+simple_count.add_argument("output_file", metavar = "output_file", default = None, type = str, 
+                          help = "the path to the output")
 
-simple_count.add_argument("annotation_dir", metavar = "annotation_dir", default = None, type = str,
-                          help = "the path to annotation directory")
+simple_count.add_argument("ref_gene_file", metavar = "refGene.txt.gz", type = str,
+                          help = "refGene annotation file downloadable from UCSC site")
+
+# simple_count.add_argument("annotation_dir", metavar = "annotation_dir", default = None, type = str,
+#                           help = "the path to annotation directory")
 
 # simple_count.add_argument("bedtools_path", metavar = "bedtools_path", default = None, type = str, 
 #                           help = "the path to bedtools")
 
 simple_count.add_argument("-q", metavar = "mapping_qual_thres", default='20', type=int,
                           help = "threshold for mapping quality for calculating base counts")
+
+simple_count.add_argument("--chr_name_list", metavar = "chr_name_list.txt", default = None, type = str,
+                          help = "tab delimited chr name correspondance table (e.g., 1st column: UCSC names, 2nd column: GRCh names), \
+                          if need to use other than UCSC chr names")
 
 simple_count.set_defaults(func = simple_count_main)
 
