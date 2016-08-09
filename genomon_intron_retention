@@ -72,6 +72,8 @@ allele_count.add_argument("--template_score_margin", metavar = "check_size", def
 allele_count.add_argument("--read_search_margin", metavar = "read_search_margin", default = 10, type = int,
                           help = "margin size for extracting short reads around exon-intron junctions (default: %(default)s)")
 
+allele_count.add_argument("--debug", default = False, action = 'store_true', help = "keep intermediate files")
+
 allele_count.set_defaults(func = allele_count_main)
 
 args = parser.parse_args()
