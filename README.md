@@ -43,6 +43,11 @@ Create the `libssw.so` and add the path to the LD_LIBRARY_PATH environment varia
 ## Commands
 
 ### simple_count
+
+Simple intron retention count program.
+Calculate the number of reads covering each exon-intron boundary and 
+putative intron retention reads (that covering enlarged reagion by specified margin size (e.g. -5bp and +5bp from that boundary)).
+
 ```
 genomon_intron_retention simple_count [-h] 
                                       [-q mapping_qual_thres] 
@@ -53,14 +58,18 @@ genomon_intron_retention simple_count [-h]
 
 #### result
 
-1. chromosome name
-1. start coordinate
-1. end coordinate
-1. exon-intron junction name
-1. score (currently no meaning)
-1. direction of junction
-1. the number of read at the junction
-1. the number of read identified as intron retention
+* **Chr**: chromosome of the exon-intron boundary
+* **Boundary_Pos**: coordinate of the exon-intron boundary (the last exonic base)
+* **Gene_Symbol**: gene symbol from refGene.txt.gz
+* **Motif_Type**: splicing donor or acceptor
+* **Strand**: transcription starnd of the gene
+* **Junction_List**: cannonical splicing junction list from that exon-intron boundary
+* **Gene_ID_List**: refGene ID list with that exon-intron boundary
+* **Exon_Num_List**: exon numbers for each refGene IDs
+* **Edge_Read_Count**: the number of reads covering each exon-intron boundary
+* **Intron_Retention_Read_Count**: the number of putative intron retention reads
+
+
 
 ### allele_count
 
