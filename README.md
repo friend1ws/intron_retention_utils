@@ -83,6 +83,7 @@ genomon_intron_retention allele_count [-h]
                                       [--read_search_margin read_search_margin]
                                       [--debug]
                                       sequence.bam mutation.txt output.txt reference.fa refGene.txt.gz
+```
 
 #### About result
 
