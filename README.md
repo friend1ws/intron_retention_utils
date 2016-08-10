@@ -23,7 +23,7 @@ python setup.py build install
 
 ## Preparation
 
-For *simple_count* and *allele_count* commands, `refGene.txt.gz` file from UCSC is necessary:
+For **simple_count** and **allele_count** commands, `refGene.txt.gz` file from UCSC is necessary:
 ```
 wget http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/refGene.txt.gz
 ```
@@ -35,24 +35,23 @@ cd resource
 bash make_ucsc_grch.sh
 ```
 
-Also, for *allele_count* command, smith waterman shared library is necessary
+Also, for **allele_count** command, a [Smith-Waterman shared library](https://github.com/mengyao/Complete-Striped-Smith-Waterman-Library) from Mengyao Zhao is necessary.
+Create the `libssw.so` and add the path to the LD_LIBRARY_PATH environment variable.
 
 
-First, you need to set up the exon-intron junction information.
-The easiest way is to use the prepared script.
-
-```
-cd resource
-bash prepareIntron.sh 
-```
 
 ## Commands
 
+### simple_count
 ```
-genomon_intron_retention [-h] [--version] [-q mapping_qual_thres] sequence.bam output_prefix annotation_dir bedtools_path
+genomon_intron_retention simple_count [-h] 
+                                      [-q mapping_qual_thres] 
+                                      [--chr_name_list chr_name_list.txt]
+                                      [--debug] 
+                                      sequence.bam output_file refGene.txt.gz
 ```
 
-## Results
+#### result
 
 1. chromosome name
 1. start coordinate
@@ -62,4 +61,22 @@ genomon_intron_retention [-h] [--version] [-q mapping_qual_thres] sequence.bam o
 1. direction of junction
 1. the number of read at the junction
 1. the number of read identified as intron retention
+
+### allele_count
+
+```
+genomon_intron_retention allele_count [-h] 
+                                      [--donor_size donor_size]
+                                      [--acceptor_size acceptor_size] 
+                                      [--chr_name_list chr_name_list.txt] 
+                                      [--template_size check_size] 
+                                      [--template_score_margin check_size]
+                                      [--read_search_margin read_search_margin]
+                                      [--debug]
+                                      sequence.bam mutation.txt output.txt reference.fa refGene.txt.gz
+```
+genomon_intron_retention [-h] [--version] [-q mapping_qual_thres] sequence.bam output_prefix annotation_dir bedtools_path
+```
+
+
 
