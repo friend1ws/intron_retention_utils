@@ -46,7 +46,7 @@ Create the `libssw.so` and add the path to the LD_LIBRARY_PATH environment varia
 
 Simple intron retention count program.
 Calculate the number of reads covering each exon-intron boundary and 
-putative intron retention reads (that covering enlarged reagion by specified margin size (e.g. -5bp and +5bp from that boundary)).
+putative intron retention reads (that covering enlarged reagion by specified margin size (e.g. -5bp and +5bp from that boundary).
 
 ```
 genomon_intron_retention simple_count [-h] 
@@ -103,5 +103,14 @@ genomon_intron_retention allele_count [-h]
 * **Intron_Retention_Negative**: the number of putative intron retention reads without the alternative allele
 * **Intron_Retention_Positive**: the number of putative intron retention reads with the alternative allele
 
+### merge_control
+
+Merge the intron retention file of control data (typically) for later filtering.
+
+```
+genomon_intron_retention merge_control [-h] [--ratio_thres RATIO_THRES]
+                                       [--sample_num_thres SAMPLE_NUM_THRES]
+                                       intron_retention_list.txt output_file
+```
 
 
