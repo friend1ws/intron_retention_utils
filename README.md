@@ -23,7 +23,7 @@ python setup.py build install
 
 ## Preparation
 
-For *simple_count* and *allele_count* commands, `refGene.txt.gz` file from UCSC is necessary:
+For **simple_count** and **allele_count** commands, `refGene.txt.gz` file from UCSC is necessary:
 ```
 wget http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/refGene.txt.gz
 ```
@@ -35,31 +35,73 @@ cd resource
 bash make_ucsc_grch.sh
 ```
 
-Also, for *allele_count* command, smith waterman shared library is necessary
+Also, for **allele_count** command, a [Smith-Waterman shared library](https://github.com/mengyao/Complete-Striped-Smith-Waterman-Library) from Mengyao Zhao is necessary.
+Create the `libssw.so` and add the path to the LD_LIBRARY_PATH environment variable.
 
 
-First, you need to set up the exon-intron junction information.
-The easiest way is to use the prepared script.
-
-```
-cd resource
-bash prepareIntron.sh 
-```
 
 ## Commands
 
+### simple_count
+
+Simple intron retention count program.
+Calculate the number of reads covering each exon-intron boundary and 
+putative intron retention reads (that covering enlarged reagion by specified margin size (e.g. -5bp and +5bp from that boundary)).
+
 ```
-genomon_intron_retention [-h] [--version] [-q mapping_qual_thres] sequence.bam output_prefix annotation_dir bedtools_path
+genomon_intron_retention simple_count [-h] 
+                                      [-q mapping_qual_thres] 
+                                      [--chr_name_list chr_name_list.txt]
+                                      [--debug] 
+                                      sequence.bam output_file refGene.txt.gz
 ```
 
-## Results
+#### About result
 
-1. chromosome name
-1. start coordinate
-1. end coordinate
-1. exon-intron junction name
-1. score (currently no meaning)
-1. direction of junction
-1. the number of read at the junction
-1. the number of read identified as intron retention
+* **Chr**: chromosome of the exon-intron boundary
+* **Boundary_Pos**: coordinate of the exon-intron boundary (the last exonic base)
+* **Gene_Symbol**: gene symbol from refGene.txt.gz
+* **Motif_Type**: splicing donor or acceptor
+* **Strand**: transcription starnd of the gene
+* **Junction_List**: cannonical splicing junction list from that exon-intron boundary
+* **Gene_ID_List**: refGene ID list with that exon-intron boundary
+* **Exon_Num_List**: exon numbers for each refGene IDs
+* **Edge_Read_Count**: the number of reads covering each exon-intron boundary
+* **Intron_Retention_Read_Count**: the number of putative intron retention reads
+
+
+
+### allele_count
+
+```
+genomon_intron_retention allele_count [-h] 
+                                      [--donor_size donor_size]
+                                      [--acceptor_size acceptor_size] 
+                                      [--chr_name_list chr_name_list.txt] 
+                                      [--template_size check_size] 
+                                      [--template_score_margin check_size]
+                                      [--read_search_margin read_search_margin]
+                                      [--debug]
+                                      sequence.bam mutation.txt output.txt reference.fa refGene.txt.gz
+```
+
+#### About result
+
+* **Gene_Symbol**: gene symbol
+* **Chr_Mut**: chromosome of the mutation
+* **Start_Mut**: start coordinate of the mutation
+* **End_Mut**: end coordinate of the the mutation
+* **Ref_Mut**: reference allele of the mutation
+* **Alt_Mut**: alternative allele of the mutation
+* **Chr_Motif**: chromosome of the splicing motif
+* **Start_Motif**: start coordinate of the splicing motif
+* **End_Motif**: end coordinate of the splicing motif
+* **Type_Motif**: donor or acceptor
+* **Strand_Motif**: transcription strand of the gene 
+* **Splice_Junction_Negative**: the number of normaly spliced reads without the alternative allele
+* **Splice_Junction_Positive**: the number of normaly spliced reads with the alternative allele
+* **Intron_Retention_Negative**: the number of putative intron retention reads without the alternative allele
+* **Intron_Retention_Positive**: the number of putative intron retention reads with the alternative allele
+
+
 
