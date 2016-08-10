@@ -224,3 +224,11 @@ def merge_control_main(args):
     subprocess.call(["rm", "-f", args.output_file + ".sorted"])
     subprocess.call(["rm", "-f", args.output_file + ".merged"])
 
+
+
+def filter_main(args):
+
+    import filter
+    filter.filter_intron_retention(args.intron_retention_file, args.output_file, args.pooled_control_file, args.num_thres, args.ratio_thres)
+
+
