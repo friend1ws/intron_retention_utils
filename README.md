@@ -18,11 +18,25 @@ bedtools (>= 2.20.0)
 ```
 git clone  https://github.com/Genomon-Project/GenomonIntronRetention.git
 cd GenomonIntronRetention
-python setup.py build
-python setup.py install
+python setup.py build install
 ```
 
 ## Preparation
+
+For *simple_count* and *allele_count* commands, `refGene.txt.gz` file from UCSC is necessary:
+```
+wget http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/refGene.txt.gz
+```
+
+Also, if your BAM file is aligned to reference genome using name convention other than UCSC,
+you need to set up correspondance file. For example, for making hg19-GRCh37 correspondance file):
+```
+cd resource
+bash make_ucsc_grch.sh
+```
+
+Also, for *allele_count* command, smith waterman shared library is necessary
+
 
 First, you need to set up the exon-intron junction information.
 The easiest way is to use the prepared script.
