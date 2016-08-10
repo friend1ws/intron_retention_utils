@@ -139,3 +139,88 @@ def allele_count_main(args):
         subprocess.call(["rm", "-rf", args.output_file + ".mutation_list.overlap.bed"]) 
 
 
+def merge_control_main(args):
+
+    # make directory for output if necessary
+    if os.path.dirname(args.output_file) != "" and not os.path.exists(os.path.dirname(args.output_file)):
+        os.makedirs(os.path.dirname(args.output_file))
+
+    hin = open(args.intron_retention_list, 'r')
+    hout = open(args.output_file + ".unsroted", 'w')
+
+    header2ind = {}
+    with open(args.intron_retention_list, 'r') as hin:
+        for line in hin:
+
+            intron_retention_file = line.rstrip('\n')
+            with open(intron_retention_file, 'r') as hin2:
+           
+                header = hin2.readline().rstrip('\n').split('\t')
+                for i, cname in enumerate(header):
+                    header2ind[cname] = i
+
+                for line2 in hin2:
+
+                    F = line2.rstrip('\n').split('\t')
+                    intron_ratio = 0
+                    read_count = F[header2ind["Edge_Read_Count"]] + ',' + F[header2ind["Intron_Retention_Read_Count"]]
+                    if F[header2ind["Edge_Read_Count"]] != "0":
+                        intron_ratio = float(F[header2ind["Intron_Retention_Read_Count"]]) / float(F[header2ind["Edge_Read_Count"]])
+       
+                    key = '\t'.join(F[:8]) 
+                    if intron_ratio >= args.ratio_thres: 
+                        print >> hout, key + '\t' + str(round(intron_ratio, 3)) + '\t' + read_count
+                
+
+    hout = open(args.output_file + ".sorted", 'w')
+    s_ret = subprocess.call(["sort", "-k1,1", "-k2,2n", args.output_file + ".unsroted"], stdout = hout)
+    hout.close()
+
+    if s_ret != 0:
+        print >> sys.stderr, "Error in sorting merged junction file"
+        sys.exit(1)
+
+    hout = open(args.output_file + ".merged", 'w')
+    with open(args.output_file + ".sorted", 'r') as hin:
+        temp_key = ""
+        temp_ratio = []
+        for line in hin:
+            F = line.rstrip('\n').split('\t')
+            key = '\t'.join(F[:8])
+            ratio = F[8]
+            read_count = F[9]
+            if key != temp_key:
+                if temp_key != "":
+                    if len(temp_ratio) >= args.sample_num_thres:
+                        print >> hout, temp_key + '\t' + ';'.join(temp_ratio) + '\t' + ';'.join(temp_read_count) 
+                temp_key = key
+                temp_ratio = []
+                temp_read_count = []
+            else:
+                temp_ratio.append(str(ratio))
+                temp_read_count.append(read_count)
+
+        if key != temp_key:
+            if temp_key != "":
+                if len(temp_ratio) >= sample_num_thres:
+                    print >> hout, temp_key + '\t' + ';'.join(temp_ratio) + '\t' + ';'.join(temp_read_count)
+
+
+    hout = open(args.output_file, 'w')
+    s_ret = subprocess.call(["bgzip", "-f", "-c", args.output_file + ".merged"], stdout = hout)
+    hout.close()
+
+    if s_ret != 0:
+        print >> sys.stderr, "Error in compression merged junction file"
+        sys.exit(1)
+
+
+    s_ret = subprocess.call(["tabix", "-p", "vcf", args.output_file])
+    if s_ret != 0:
+        print >> sys.stderr, "Error in indexing merged junction file"
+        sys.exit(1)
+
+    subprocess.call(["rm", "-f", args.output_file + ".unsroted"])
+    subprocess.call(["rm", "-f", args.output_file + ".sorted"])
+    subprocess.call(["rm", "-f", args.output_file + ".merged"])
+
