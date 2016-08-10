@@ -109,8 +109,8 @@ Merge the intron retention file of control data (typically) for later filtering.
 
 ```
 genomon_intron_retention merge_control [-h] [--ratio_thres RATIO_THRES]
-                                              [--sample_num_thres SAMPLE_NUM_THRES]
-                                              intron_retention_list.txt output_file
+                                       [--sample_num_thres SAMPLE_NUM_THRES]
+                                       intron_retention_list.txt output_file
 ```
 
 
