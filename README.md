@@ -56,7 +56,7 @@ genomon_intron_retention simple_count [-h]
                                       sequence.bam output_file refGene.txt.gz
 ```
 
-#### result
+#### About result
 
 * **Chr**: chromosome of the exon-intron boundary
 * **Boundary_Pos**: coordinate of the exon-intron boundary (the last exonic base)
@@ -83,9 +83,24 @@ genomon_intron_retention allele_count [-h]
                                       [--read_search_margin read_search_margin]
                                       [--debug]
                                       sequence.bam mutation.txt output.txt reference.fa refGene.txt.gz
-```
-genomon_intron_retention [-h] [--version] [-q mapping_qual_thres] sequence.bam output_prefix annotation_dir bedtools_path
-```
+
+#### About result
+
+* **Gene_Symbol**: gene symbol
+* **Chr_Mut**: chromosome of the mutation
+* **Start_Mut**: start coordinate of the mutation
+* **End_Mut**: end coordinate of the the mutation
+* **Ref_Mut**: reference allele of the mutation
+* **Alt_Mut**: alternative allele of the mutation
+* **Chr_Motif**: chromosome of the splicing motif
+* **Start_Motif**: start coordinate of the splicing motif
+* **End_Motif**: end coordinate of the splicing motif
+* **Type_Motif**: donor or acceptor
+* **Strand_Motif**: transcription strand of the gene 
+* **Splice_Junction_Negative**: the number of normaly spliced reads without the alternative allele
+* **Splice_Junction_Positive**: the number of normaly spliced reads with the alternative allele
+* **Intron_Retention_Negative**: the number of putative intron retention reads without the alternative allele
+* **Intron_Retention_Positive**: the number of putative intron retention reads with the alternative allele
 
 
 
