@@ -56,7 +56,7 @@ def summarize_edge(edge_bed, edge_broaden_bed, output_file, margin):
         for line in hin:
             F = line.rstrip('\n').split('\t')
             if F[len(F) - 1] != str(margin * 2): continue
-            if F[17] == '+':
+            if (F[16] == "donor" and F[17] == '+') or (F[16] == "acceptor" and F[17] == '-'): 
                 F[13] = str(int(F[13]) + margin - 1)
                 F[14] = str(int(F[14]) - margin)
             else:
