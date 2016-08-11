@@ -146,7 +146,7 @@ def merge_control_main(args):
         os.makedirs(os.path.dirname(args.output_file))
 
     hin = open(args.intron_retention_list, 'r')
-    hout = open(args.output_file + ".unsroted", 'w')
+    hout = open(args.output_file + ".unsorted", 'w')
 
     header2ind = {}
     with open(args.intron_retention_list, 'r') as hin:
@@ -173,7 +173,7 @@ def merge_control_main(args):
                 
 
     hout = open(args.output_file + ".sorted", 'w')
-    s_ret = subprocess.call(["sort", "-k1,1", "-k2,2n", args.output_file + ".unsroted"], stdout = hout)
+    s_ret = subprocess.call(["sort", "-k1,1", "-k2,2n", args.output_file + ".unsorted"], stdout = hout)
     hout.close()
 
     if s_ret != 0:
@@ -220,10 +220,11 @@ def merge_control_main(args):
         print >> sys.stderr, "Error in indexing merged junction file"
         sys.exit(1)
 
-    subprocess.call(["rm", "-f", args.output_file + ".unsroted"])
+    """
+    subprocess.call(["rm", "-f", args.output_file + ".unsorted"])
     subprocess.call(["rm", "-f", args.output_file + ".sorted"])
     subprocess.call(["rm", "-f", args.output_file + ".merged"])
-
+    """
 
 
 def filter_main(args):
@@ -231,4 +232,10 @@ def filter_main(args):
     import filter
     filter.filter_intron_retention(args.intron_retention_file, args.output_file, args.pooled_control_file, args.num_thres, args.ratio_thres)
 
+
+def associate_main(args):
+    
+    import associate
+    associate.generate_mutation_target(args.intron_retention_file, args.output_file + ".target_list.bed",
+                                       args.output_file + ".intron_retention_file.header", args.donor_size, args.acceptor_size)
 
