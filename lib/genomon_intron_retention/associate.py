@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-import sys, re
+import sys, re, subprocess
 
 def generate_mutation_target(input_file, output_file, output_header, donor_size, acceptor_size):
 
@@ -8,7 +8,7 @@ def generate_mutation_target(input_file, output_file, output_header, donor_size,
     acceptor_size_intron, acceptor_size_exon = [int(x) for x in acceptor_size.split(',')]
     
     header2ind = {}
-    hout = open(output_file, 'w')
+    hout = open(output_file + ".tmp", 'w')
     with open(input_file, 'r') as hin:
         
         header = hin.readline().rstrip('\n').split('\t')
@@ -71,4 +71,11 @@ def generate_mutation_target(input_file, output_file, output_header, donor_size,
                 print >> hout, '\t'.join([F[header2ind["Chr"]], str(start), str(end), "opposite-side-impact"] + F)
  
     hout.close()
+
+    hout = open(output_file, 'w')
+    subprocess.call(["sort", "-k1,1", "-k2,2n", "-k3,3n", output_file + ".tmp"], stdout = hout)
+    hout.close()
+
+    subprocess.call(["rm", "-rf", output_file + ".tmp"])
+
 

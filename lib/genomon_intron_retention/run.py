@@ -220,11 +220,9 @@ def merge_control_main(args):
         print >> sys.stderr, "Error in indexing merged junction file"
         sys.exit(1)
 
-    """
     subprocess.call(["rm", "-f", args.output_file + ".unsorted"])
     subprocess.call(["rm", "-f", args.output_file + ".sorted"])
     subprocess.call(["rm", "-f", args.output_file + ".merged"])
-    """
 
 
 def filter_main(args):
@@ -235,7 +233,14 @@ def filter_main(args):
 
 def associate_main(args):
     
-    import associate
+    import mutation, associate
     associate.generate_mutation_target(args.intron_retention_file, args.output_file + ".target_list.bed",
                                        args.output_file + ".intron_retention_file.header", args.donor_size, args.acceptor_size)
+
+    mutation.anno2bed(args.mutation_file, args.output_file + ".mutation_list.bed")
+    
+    hout = open(args.output_file + ".mutation_list.associate.bed", 'w')
+    subprocess.call(["bedtools", "intersect", "-a", args.output_file + ".mutation_list.bed",
+                     "-b", args.output_file + ".target_list.bed", "-wa", "-wb"], stdout = hout)
+    hout.close()
 
