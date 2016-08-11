@@ -79,3 +79,22 @@ def generate_mutation_target(input_file, output_file, output_header, donor_size,
     subprocess.call(["rm", "-rf", output_file + ".tmp"])
 
 
+def process_result(input_file, intron_retention_header_file, output_file):
+
+    hout = open(output_file, 'w')
+
+    with open(intron_retention_header_file, 'r') as hin:
+        intron_retention_header = hin.readline().rstrip('\n')
+        
+
+    print >> hout, '\t'.join(["Chr_Mut", "Start_Mut", "End_Mut", "Ref_Mut", "Alt_Mut", "Intron_Retention_Type"]) + '\t' + intron_retention_header
+
+    with open(input_file, 'r') as hin:
+        for line in hin:
+            F = line.rstrip('\n').split('\t')
+
+            print >> hout, '\t'.join(F[0:5]) + '\t' + '\t'.join(F[8:])
+
+    hout.close()
+
+    

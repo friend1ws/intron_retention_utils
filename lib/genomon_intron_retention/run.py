@@ -244,3 +244,10 @@ def associate_main(args):
                      "-b", args.output_file + ".target_list.bed", "-wa", "-wb"], stdout = hout)
     hout.close()
 
+    associate.process_result(args.output_file + ".mutation_list.associate.bed", 
+                             args.output_file + ".intron_retention_file.header", args.output_file)
+
+    subprocess.call(["rm", "-rf", args.output_file + ".target_list.bed"])
+    subprocess.call(["rm", "-rf", args.output_file + ".intron_retention_file.header"])
+    subprocess.call(["rm", "-rf", args.output_file + ".mutation_list.associate.bed"])
+
