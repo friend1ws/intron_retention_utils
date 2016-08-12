@@ -79,7 +79,11 @@ def generate_mutation_target(input_file, output_file, output_header, donor_size,
     subprocess.call(["rm", "-rf", output_file + ".tmp"])
 
 
-def process_result(input_file, intron_retention_header_file, output_file):
+def process_result(input_file, intron_retention_header_file, output_file, donor_size, acceptor_size):
+
+    donor_size_exon, donor_size_intron = [int(x) for x in donor_size.split(',')]
+    acceptor_size_intron, acceptor_size_exon = [int(x) for x in acceptor_size.split(',')]
+
 
     hout = open(output_file, 'w')
 
@@ -87,13 +91,36 @@ def process_result(input_file, intron_retention_header_file, output_file):
         intron_retention_header = hin.readline().rstrip('\n')
         
 
-    print >> hout, '\t'.join(["Chr_Mut", "Start_Mut", "End_Mut", "Ref_Mut", "Alt_Mut", "Intron_Retention_Type"]) + '\t' + intron_retention_header
+    print >> hout, intron_retention_header + '\t' + '\t'.join(["Mutation_Key", "Motif_Pos", "Motif_Type", "Is_Canonical", "Intron_Retention_Type"])
 
     with open(input_file, 'r') as hin:
         for line in hin:
             F = line.rstrip('\n').split('\t')
 
-            print >> hout, '\t'.join(F[0:5]) + '\t' + '\t'.join(F[8:])
+            mutation_key = F[3]
+            motif_pos = F[4] + ':' + str(int(F[5]) + 1) + '-' + F[6]
+            
+            if (F[11] == "donor" and F[7] == "direct-impact") or (F[11] == "acceptor" and F[7] == "opposite-side-impact"):
+                motif_type = "splicing donor disruption"
+            elif (F[11] == "acceptor" and F[7] == "direct-impact") or (F[11] == "donor" and F[7] == "opposite-side-impact"): 
+                motif_type = "splicing acceptor disruption"
+
+            # check cannonical
+            mut_start, mut_end = int(F[1]) + 1, int(F[2])
+            if motif_type == "splicing donor disruption":
+                if F[12] == '+':
+                    canonical_start, canonical_end = int(F[5]) + donor_size_exon + 1, int(F[5]) + donor_size_exon + 2
+                else:
+                    canonical_start, canonical_end = int(F[5]) + donor_size_intron - 1, int(F[5]) + donor_size_intron 
+            else:
+                if F[12] == '+':
+                    canonical_start, canonical_end = int(F[5]) + acceptor_size_intron - 1, int(F[5]) + acceptor_size_intron
+                else:
+                    canonical_start, canonical_end = int(F[5]) + acceptor_size_exon + 1, int(F[5]) + acceptor_size_exon + 2
+
+            is_canonical = "canonical" if (mut_start <= canonical_end and mut_end >= canonical_start) else "non-canonical" 
+
+            print >> hout, '\t'.join(F[8:]) + '\t' + mutation_key + '\t' + motif_pos + '\t' + motif_type + '\t' + is_canonical + '\t' + F[7]
 
     hout.close()
 

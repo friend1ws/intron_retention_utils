@@ -234,22 +234,42 @@ def filter_main(args):
 def associate_main(args):
     
     import mutation, associate
+
     associate.generate_mutation_target(args.intron_retention_file, args.output_file + ".target_list.bed",
                                        args.output_file + ".intron_retention_file.header", args.donor_size, args.acceptor_size)
 
-    mutation.anno2bed(args.mutation_file, args.output_file + ".mutation_list.bed")
-    
+    # convert annovar format to vcf
+    if args.mutation == "anno":
+        mutation.anno2vcf(args.mutation_file, args.output_file + ".tmp.mutation.unsorted.vcf", args.reference_genome)
+    else:
+        mutation.remove_vcf_header(args.mutation_file, args.output_file + ".tmp.mutation.unsorted.vcf")
+
+    hout = open(args.output_file + ".tmp.mutation.sorted.vcf", 'w')
+    s_ret = subprocess.call(["sort", "-k1,1", "-k2,2n", args.output_file + ".tmp.mutation.unsorted.vcf"], stdout = hout)
+    hout.close()
+
+    if s_ret != 0:
+        print >> sys.stderr, "Error in sorting vcf file"
+        sys.exit(1)
+
+    mutation.vcf2bed(args.output_file + ".tmp.mutation.sorted.vcf", args.output_file + ".tmp.mutation.sorted.vcf.bed")
+
+    # mutation.anno2bed(args.mutation_file, args.output_file + ".mutation_list.bed")
+   
     hout = open(args.output_file + ".mutation_list.associate.bed", 'w')
-    subprocess.call(["bedtools", "intersect", "-a", args.output_file + ".mutation_list.bed",
+    subprocess.call(["bedtools", "intersect", "-a", args.output_file + ".tmp.mutation.sorted.vcf.bed",
                      "-b", args.output_file + ".target_list.bed", "-wa", "-wb"], stdout = hout)
     hout.close()
 
     associate.process_result(args.output_file + ".mutation_list.associate.bed", 
-                             args.output_file + ".intron_retention_file.header", args.output_file)
+                             args.output_file + ".intron_retention_file.header", 
+                             args.output_file, args.donor_size, args.acceptor_size)
 
     subprocess.call(["rm", "-rf", args.output_file + ".target_list.bed"])
     subprocess.call(["rm", "-rf", args.output_file + ".intron_retention_file.header"])
-    supprocess.call(["rm", "-rf", args.output_file + ".mutation_list.bed"])
+    subprocess.call(["rm", "-rf", args.output_file + ".tmp.mutation.unsorted.vcf"])
+    subprocess.call(["rm", "-rf", args.output_file + ".tmp.mutation.sorted.vcf"])
+    subprocess.call(["rm", "-rf", args.output_file + ".tmp.mutation.sorted.vcf.bed"])
     subprocess.call(["rm", "-rf", args.output_file + ".mutation_list.associate.bed"])
 
 
