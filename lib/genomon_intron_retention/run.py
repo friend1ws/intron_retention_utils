@@ -249,5 +249,7 @@ def associate_main(args):
 
     subprocess.call(["rm", "-rf", args.output_file + ".target_list.bed"])
     subprocess.call(["rm", "-rf", args.output_file + ".intron_retention_file.header"])
+    supprocess.call(["rm", "-rf", args.output_file + ".mutation_list.bed"])
     subprocess.call(["rm", "-rf", args.output_file + ".mutation_list.associate.bed"])
+
 
