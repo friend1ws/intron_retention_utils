@@ -265,11 +265,12 @@ def associate_main(args):
                              args.output_file + ".intron_retention_file.header", 
                              args.output_file, args.donor_size, args.acceptor_size)
 
-    subprocess.call(["rm", "-rf", args.output_file + ".target_list.bed"])
-    subprocess.call(["rm", "-rf", args.output_file + ".intron_retention_file.header"])
-    subprocess.call(["rm", "-rf", args.output_file + ".tmp.mutation.unsorted.vcf"])
-    subprocess.call(["rm", "-rf", args.output_file + ".tmp.mutation.sorted.vcf"])
-    subprocess.call(["rm", "-rf", args.output_file + ".tmp.mutation.sorted.vcf.bed"])
-    subprocess.call(["rm", "-rf", args.output_file + ".mutation_list.associate.bed"])
+    if args.debug == False:
+        subprocess.call(["rm", "-rf", args.output_file + ".target_list.bed"])
+        subprocess.call(["rm", "-rf", args.output_file + ".intron_retention_file.header"])
+        subprocess.call(["rm", "-rf", args.output_file + ".tmp.mutation.unsorted.vcf"])
+        subprocess.call(["rm", "-rf", args.output_file + ".tmp.mutation.sorted.vcf"])
+        subprocess.call(["rm", "-rf", args.output_file + ".tmp.mutation.sorted.vcf.bed"])
+        subprocess.call(["rm", "-rf", args.output_file + ".mutation_list.associate.bed"])
 
 

@@ -153,6 +153,8 @@ associate.add_argument('--mutation', choices=['vcf', 'anno'], default = 'vcf',
 associate.add_argument("--reference_genome", metavar = "reference.fa", type = str,
                        help = "the path to the reference genomoe sequence (necessary for vcf format)")
 
+associate.add_argument("--debug", default = False, action = 'store_true', help = "keep intermediate files")
+
 associate.set_defaults(func = associate_main)
 
 args = parser.parse_args()

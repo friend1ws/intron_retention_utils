@@ -91,14 +91,14 @@ def process_result(input_file, intron_retention_header_file, output_file, donor_
         intron_retention_header = hin.readline().rstrip('\n')
         
 
-    print >> hout, intron_retention_header + '\t' + '\t'.join(["Mutation_Key", "Motif_Pos", "Motif_Type", "Is_Canonical", "Intron_Retention_Type"])
+    print >> hout, intron_retention_header + '\t' + '\t'.join(["Mutation_Key", "Motif_Pos", "Mutation_Type", "Is_Canonical", "Intron_Retention_Type"])
 
     with open(input_file, 'r') as hin:
         for line in hin:
             F = line.rstrip('\n').split('\t')
 
             mutation_key = F[3]
-            motif_pos = F[4] + ':' + str(int(F[5]) + 1) + '-' + F[6]
+            motif_pos = F[4] + ':' + str(int(F[5]) + 1) + '-' + F[6] + ',' + F[12]
             
             if (F[11] == "donor" and F[7] == "direct-impact") or (F[11] == "acceptor" and F[7] == "opposite-side-impact"):
                 motif_type = "splicing donor disruption"
