@@ -3,9 +3,9 @@
 from genomon_intron_retention.run import *
 import argparse
 
-parser = argparse.ArgumentParser(prog = "genomon_intron_retention")
+parser = argparse.ArgumentParser(prog = "intron_retention_utils")
 
-parser.add_argument("--version", action = "version", version = "genomon_intron_retention-0.2.0")
+parser.add_argument("--version", action = "version", version = "intron_retention_utils-0.2.0")
 
 subparsers = parser.add_subparsers()
 

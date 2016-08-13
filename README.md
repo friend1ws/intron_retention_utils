@@ -2,7 +2,7 @@
 
 ## Introduction
 
-GenomonIntronRetention is a software for calculating intron retention events genome-wide from RNA sequencing data.
+intron_retention_utils is a software for calculating intron retention events genome-wide from RNA sequencing data.
 
 ## Dependency
 
@@ -17,7 +17,7 @@ bedtools (>= 2.20.0)
 ## Install 
 ```
 git clone  https://github.com/Genomon-Project/GenomonIntronRetention.git
-cd GenomonIntronRetention
+cd intron_retention_utils
 python setup.py build install
 ```
 
@@ -49,7 +49,7 @@ Calculate the number of reads covering each exon-intron boundary and
 putative intron retention reads (that covering enlarged reagion by specified margin size (e.g. -5bp and +5bp from that boundary).
 
 ```
-genomon_intron_retention simple_count [-h] 
+intron_retention_utils simple_count [-h] 
                                       [-q mapping_qual_thres] 
                                       [--chr_name_list chr_name_list.txt]
                                       [--debug] 
@@ -74,7 +74,7 @@ genomon_intron_retention simple_count [-h]
 ### allele_count
 
 ```
-genomon_intron_retention allele_count [-h] 
+intron_retention_utils allele_count [-h] 
                                       [--donor_size donor_size]
                                       [--acceptor_size acceptor_size] 
                                       [--chr_name_list chr_name_list.txt] 
@@ -108,7 +108,7 @@ genomon_intron_retention allele_count [-h]
 Merge the intron retention file of control data (typically) for later filtering.
 
 ```
-genomon_intron_retention merge_control [-h] [--ratio_thres RATIO_THRES]
+intron_retention_utils merge_control [-h] [--ratio_thres RATIO_THRES]
                                        [--sample_num_thres SAMPLE_NUM_THRES]
                                        intron_retention_list.txt output_file
 ```
