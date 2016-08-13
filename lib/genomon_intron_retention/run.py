@@ -239,7 +239,7 @@ def associate_main(args):
                                        args.output_file + ".intron_retention_file.header", args.donor_size, args.acceptor_size)
 
     # convert annovar format to vcf
-    if args.mutation == "anno":
+    if args.mutation_format == "anno":
         mutation.anno2vcf(args.mutation_file, args.output_file + ".tmp.mutation.unsorted.vcf", args.reference_genome)
     else:
         mutation.remove_vcf_header(args.mutation_file, args.output_file + ".tmp.mutation.unsorted.vcf")
