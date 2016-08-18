@@ -113,4 +113,34 @@ intron_retention_utils merge_control [-h] [--ratio_thres RATIO_THRES]
                                        intron_retention_list.txt output_file
 ```
 
+### filter
 
+Filter out intron retentions that do not satisty specified conditions
+```
+intron_retention_utils filter [-h] [--num_thres NUM_THRES]
+                              [--ratio_thres RATIO_THRES]
+                              [--pooled_control_file POOLED_CONTROL_FILE]
+                              intron_retention.txt output.txt
+```
+
+### associate
+
+Associate intron retention counts (typically output of simple_count commands) with mutations
+```
+intron_retention_utils associate [-h] [--donor_size donor_size]
+                                 [--acceptor_size acceptor_size]
+                                 [--mutation_format {vcf,anno}]
+                                 [--reference_genome reference.fa]
+                                 [--sv] [--intron_margin intron_margin]
+                                 [--debug]
+                                 intron_retention.txt mutation.txt output_file
+```
+
+#### About result
+The following columns are added to the input files:
+
+* **Mutation_Key**: vcf format mutation aggregated by commas
+* **Motif_Pos**: coordinate of motif positions
+* **Mutation_Type**: `splicing donor disruption` or `splicing acceptor disruption`
+* **Is_Canonical**: whether the mutation is disrupting cannonical splicing motifs (GT-AG) or not
+* **Intron_Retention_Type**: `direct-impact` or `opposite-side-impact`
