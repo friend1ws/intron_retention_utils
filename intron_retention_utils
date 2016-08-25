@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-from genomon_intron_retention.run import *
+from intron_retention_utils.run import *
 import argparse
 
 parser = argparse.ArgumentParser(prog = "intron_retention_utils")
@@ -24,7 +24,10 @@ simple_count.add_argument("output_file", metavar = "output_file", default = None
 simple_count.add_argument("ref_gene_file", metavar = "refGene.txt.gz", type = str,
                           help = "refGene annotation file downloadable from UCSC site")
 
-simple_count.add_argument("-q", metavar = "mapping_qual_thres", default='20', type=int,
+simple_count.add_argument("--intron_retention_check_size", metavar = "intron_retention_check_size", default = 10, type = int,
+                          help = "exon and intron region size to be covered by putative intron reads")
+
+simple_count.add_argument("--mapping_qual_thres", metavar = "mapping_qual_thres", default='20', type=int,
                           help = "threshold for mapping quality for calculating base counts")
 
 simple_count.add_argument("--chr_name_list", metavar = "chr_name_list.txt", default = None, type = str,
@@ -153,9 +156,16 @@ associate.add_argument('--mutation_format', choices=['vcf', 'anno'], default = '
 associate.add_argument("--reference_genome", metavar = "reference.fa", type = str,
                        help = "the path to the reference genomoe sequence (necessary for vcf format)")
 
+associate.add_argument('--sv', action='store_true',
+                       help = "analysis structural variation file")
+
+associate.add_argument("--intron_margin", metavar = "intron_margin", default = 10, type = int,
+                       help = "the margin size of intron region for checking associations with sv breakpoints (default: %(default)s)")
+
 associate.add_argument("--debug", default = False, action = 'store_true', help = "keep intermediate files")
 
 associate.set_defaults(func = associate_main)
+##########
 
 args = parser.parse_args()
 

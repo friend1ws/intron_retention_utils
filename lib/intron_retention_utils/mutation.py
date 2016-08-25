@@ -98,3 +98,27 @@ def anno2bed(mutation_file, output_file):
 
     subprocess.call(["rm", "-rf", output_file + ".tmp"])
 
+
+def genosv2bed(input_file, output_file):
+
+    hout = open(output_file, 'w')
+    num = 1
+    with open(input_file, 'r') as hin:
+        for line in hin:
+            F = line.rstrip('\n').split('\t')
+            if F[0].startswith('#'): continue
+            if F[0] == "Chr_1" and F[1] == "Pos_1": continue
+            chr1, chr2 = F[0], F[3]
+            start1, end1 = str(int(F[1]) - 1), F[1]
+            start2, end2 = str(int(F[4]) - 1), F[4]
+            dir1, dir2 = F[2], F[5]
+            inseq = F[6]
+
+            key = ','.join([chr1, end1, dir1, chr2, end2, dir2, inseq])
+
+            print >> hout, '\t'.join([chr1, start1, end1, dir1, key])
+            print >> hout, '\t'.join([chr2, start2, end2, dir2, key])
+
+    hout.close()
+
+

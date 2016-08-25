@@ -16,9 +16,11 @@ def simple_count_main(args):
     intron_db.generate_intron_retention_list(args.ref_gene_file, args.output_file + ".refGene.edge.bed", 
                                              "1,0", "0,1", args.chr_name_list)
 
-    intron_db.broaden_edge(args.output_file + ".refGene.edge.bed", args.output_file + ".refGene.edge_broaden.bed", 5)
+    intron_db.broaden_edge(args.output_file + ".refGene.edge.bed", 
+                           args.output_file + ".refGene.edge_broaden.bed",
+                           args.intron_retention_check_size)
 
-    simple_count.filterImproper(args.bam_file, args.output_file + ".filt.bam", args.q)
+    simple_count.filterImproper(args.bam_file, args.output_file + ".filt.bam", args.mapping_qual_thres)
 
 
     hout = open(args.output_file + ".filt.bed12", 'w')
@@ -49,7 +51,10 @@ def simple_count_main(args):
         print >> sys.stderr, "error in generating edge_broaden.bed"
         sys.exit(1)
 
-    simple_count.summarize_edge(args.output_file + ".edge.bed", args.output_file + ".edge_broaden.bed", args.output_file + ".unsorted", 5)
+    simple_count.summarize_edge(args.output_file + ".edge.bed",
+                                args.output_file + ".edge_broaden.bed",
+                                args.output_file + ".unsorted",
+                                args.intron_retention_check_size)
 
     # print header
     hout = open(args.output_file, 'w')
@@ -235,42 +240,78 @@ def associate_main(args):
     
     import mutation, associate
 
-    associate.generate_mutation_target(args.intron_retention_file, args.output_file + ".target_list.bed",
-                                       args.output_file + ".intron_retention_file.header", args.donor_size, args.acceptor_size)
+    is_sv = True if args.sv else False
 
-    # convert annovar format to vcf
-    if args.mutation_format == "anno":
-        mutation.anno2vcf(args.mutation_file, args.output_file + ".tmp.mutation.unsorted.vcf", args.reference_genome)
+    if is_sv == False:
+
+        associate.generate_mutation_target(args.intron_retention_file, args.output_file + ".target_list.bed",
+                                           args.output_file + ".intron_retention_file.header", args.donor_size, args.acceptor_size)
+
+        # convert annovar format to vcf
+        if args.mutation_format == "anno":
+            mutation.anno2vcf(args.mutation_file, args.output_file + ".tmp.mutation.unsorted.vcf", args.reference_genome)
+        else:
+            mutation.remove_vcf_header(args.mutation_file, args.output_file + ".tmp.mutation.unsorted.vcf")
+
+        hout = open(args.output_file + ".tmp.mutation.sorted.vcf", 'w')
+        s_ret = subprocess.call(["sort", "-k1,1", "-k2,2n", args.output_file + ".tmp.mutation.unsorted.vcf"], stdout = hout)
+        hout.close()
+
+        if s_ret != 0:
+            print >> sys.stderr, "Error in sorting vcf file"
+            sys.exit(1)
+
+        mutation.vcf2bed(args.output_file + ".tmp.mutation.sorted.vcf", args.output_file + ".tmp.mutation.sorted.vcf.bed")
+
+        # mutation.anno2bed(args.mutation_file, args.output_file + ".mutation_list.bed")
+       
+        hout = open(args.output_file + ".mutation_list.associate.bed", 'w')
+        subprocess.call(["bedtools", "intersect", "-a", args.output_file + ".tmp.mutation.sorted.vcf.bed",
+                         "-b", args.output_file + ".target_list.bed", "-wa", "-wb"], stdout = hout)
+        hout.close()
+
+        associate.process_result(args.output_file + ".mutation_list.associate.bed", 
+                                 args.output_file + ".intron_retention_file.header", 
+                                 args.output_file, args.donor_size, args.acceptor_size)
+
+        if args.debug == False:
+            subprocess.call(["rm", "-rf", args.output_file + ".target_list.bed"])
+            subprocess.call(["rm", "-rf", args.output_file + ".intron_retention_file.header"])
+            subprocess.call(["rm", "-rf", args.output_file + ".tmp.mutation.unsorted.vcf"])
+            subprocess.call(["rm", "-rf", args.output_file + ".tmp.mutation.sorted.vcf"])
+            subprocess.call(["rm", "-rf", args.output_file + ".tmp.mutation.sorted.vcf.bed"])
+            subprocess.call(["rm", "-rf", args.output_file + ".mutation_list.associate.bed"])
+
+
     else:
-        mutation.remove_vcf_header(args.mutation_file, args.output_file + ".tmp.mutation.unsorted.vcf")
+        
+        associate.generate_sv_target(args.intron_retention_file, args.output_file + ".target_list.bed",
+                                     args.output_file + ".intron_retention_file.header", args.intron_margin)
 
-    hout = open(args.output_file + ".tmp.mutation.sorted.vcf", 'w')
-    s_ret = subprocess.call(["sort", "-k1,1", "-k2,2n", args.output_file + ".tmp.mutation.unsorted.vcf"], stdout = hout)
-    hout.close()
+        mutation.genosv2bed(args.mutation_file, args.output_file + ".tmp.unsorted.bedpe")
 
-    if s_ret != 0:
-        print >> sys.stderr, "Error in sorting vcf file"
-        sys.exit(1)
+        hout = open(args.output_file + ".tmp.bedpe", 'w')
+        s_ret = subprocess.call(["sort", "-k1,1", "-k2,2n", "-k3,3n", "-k4,4", "-k5,5n", "-k6,6n", args.output_file + ".tmp.unsorted.bedpe"], stdout = hout)
+        hout.close()
 
-    mutation.vcf2bed(args.output_file + ".tmp.mutation.sorted.vcf", args.output_file + ".tmp.mutation.sorted.vcf.bed")
+        if s_ret != 0:
+            print >> sys.stderr, "Error in sorting bedpe file"
+            sys.exit(1)
 
-    # mutation.anno2bed(args.mutation_file, args.output_file + ".mutation_list.bed")
-   
-    hout = open(args.output_file + ".mutation_list.associate.bed", 'w')
-    subprocess.call(["bedtools", "intersect", "-a", args.output_file + ".tmp.mutation.sorted.vcf.bed",
-                     "-b", args.output_file + ".target_list.bed", "-wa", "-wb"], stdout = hout)
-    hout.close()
+        hout = open(args.output_file + ".sv_list.associate.bed", 'w')
+        subprocess.call(["bedtools", "intersect", "-a", args.output_file + ".tmp.bedpe",
+                         "-b", args.output_file + ".target_list.bed", "-wa", "-wb"], stdout = hout)
+        hout.close()
 
-    associate.process_result(args.output_file + ".mutation_list.associate.bed", 
-                             args.output_file + ".intron_retention_file.header", 
-                             args.output_file, args.donor_size, args.acceptor_size)
+        associate.process_result_sv(args.output_file + ".sv_list.associate.bed",
+                                    args.output_file + ".intron_retention_file.header",
+                                    args.output_file)
 
-    if args.debug == False:
-        subprocess.call(["rm", "-rf", args.output_file + ".target_list.bed"])
-        subprocess.call(["rm", "-rf", args.output_file + ".intron_retention_file.header"])
-        subprocess.call(["rm", "-rf", args.output_file + ".tmp.mutation.unsorted.vcf"])
-        subprocess.call(["rm", "-rf", args.output_file + ".tmp.mutation.sorted.vcf"])
-        subprocess.call(["rm", "-rf", args.output_file + ".tmp.mutation.sorted.vcf.bed"])
-        subprocess.call(["rm", "-rf", args.output_file + ".mutation_list.associate.bed"])
+        if args.debug == False:
+            subprocess.call(["rm", "-rf", args.output_file + ".target_list.bed"])
+            subprocess.call(["rm", "-rf", args.output_file + ".intron_retention_file.header"])
+            subprocess.call(["rm", "-rf", args.output_file + ".tmp.unsorted.bedpe"])
+            subprocess.call(["rm", "-rf", args.output_file + ".tmp.bedpe"])
+            subprocess.call(["rm", "-rf", args.output_file + ".sv_list.associate.bed"])
 
 
