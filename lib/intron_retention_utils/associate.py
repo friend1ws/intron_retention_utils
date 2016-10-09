@@ -173,7 +173,7 @@ def process_result_sv(input_file, intron_retention_header_file, output_file):
         intron_retention_header = hin.readline().rstrip('\n')
 
 
-    print >> hout, intron_retention_header + '\t' + "SV_key"
+    print >> hout, intron_retention_header + '\t' + "SV_Key"
 
     with open(input_file, 'r') as hin:
         for line in hin:

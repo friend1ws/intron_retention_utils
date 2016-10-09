@@ -6,8 +6,10 @@ def get_seq(reference, chr, start, end):
 
     seq = ""
     for item in pysam.faidx(reference, chr + ":" + str(start) + "-" + str(end)):
-        if item[0] == ">": continue
+        # if item[0] == ">": continue
         seq = seq + item.rstrip('\n')
+    seq = seq.replace('>', '')
+    seq = seq.replace(chr + ":" + str(start) + "-" + str(end), '')
 
     return seq
 

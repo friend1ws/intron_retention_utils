@@ -107,6 +107,9 @@ def generate_template_seq(output_file, reference, mut_chr, mut_start, mut_end, m
 
         # for debug
         if mut_seq_tmp[mut_start_rel] != mut_ref:
+            print '\t'.join([mut_chr, str(mut_start), str(mut_end), mut_ref, mut_alt])
+            print mut_seq_tmp
+            print mut_start_rel
             print >> sys.stderr, "mutation inconsistent!!!"
             sys.exit(1)
         mut_seq_tmp = mut_seq_tmp[:mut_start_rel] + mut_alt + mut_seq_tmp[(mut_end_rel + 1):]
@@ -120,6 +123,7 @@ def generate_template_seq(output_file, reference, mut_chr, mut_start, mut_end, m
 
         # for debug
         if mut_seq_tmp[mut_start_rel:(mut_end_rel + 1)] != mut_ref != '-':
+            print '\t'.join([mut_chr, str(mut_start), str(mut_end), mut_ref, mut_alt])
             print >> sys.stderr, "mutation inconsistent!!!"
             sys.exit(1)
         mut_seq_tmp = mut_seq_tmp[:mut_start_rel] + mut_seq_tmp[(mut_end_rel + 1):]
