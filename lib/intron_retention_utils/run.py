@@ -108,7 +108,7 @@ def allele_count_main(args):
         for line in hin:
             F = line.rstrip('\n').split('\t')
             mut_chr, mut_start, mut_end, mut_ref, mut_alt = F[0], int(F[1]) + 1, int(F[2]), F[3], F[4]
-            motif_chr, motif_start, motif_end, motif_type, motif_strand, junc_list = F[5], int(F[6]) + 1, int(F[7]) + 1, F[9], F[10], F[11]
+            motif_chr, motif_start, motif_end, motif_type, motif_strand, junc_list = F[5], int(F[6]) + 1, int(F[7]), F[9], F[10], F[11]
             motif_gene = F[8]
 
             # generate template sequence (splicing junction with and/or without mutation, intron retention with and/or withoug mutation)
