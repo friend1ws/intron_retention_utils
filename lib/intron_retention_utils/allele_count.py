@@ -3,7 +3,7 @@
 import sys, re, pysam
 import my_seq
 
-mut_seq_margin = 50
+mut_seq_margin = 100
 
 # not UCSC bed format (-1 based start positions)
 def generate_template_seq(output_file, reference, mut_chr, mut_start, mut_end, mut_ref, mut_alt, 

@@ -2,6 +2,7 @@
 
 import gzip, subprocess
 
+# this is deprecated and now this package uses annot_utils
 def generate_edge_bed(ref_gene_file, output_file, chr_name_list):
 
     ucsc2new_chr = {}
@@ -65,7 +66,7 @@ def generate_edge_bed(ref_gene_file, output_file, chr_name_list):
 def broaden_edge(input_file, output_file, margin):
 
     hout = open(output_file, 'w')
-    with open(input_file, 'r') as hin:
+    with gzip.open(input_file, 'r') as hin:
         for line in hin:
             F = line.rstrip('\n').split('\t')
 
