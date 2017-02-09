@@ -8,37 +8,24 @@ intron_retention_utils is a software for calculating intron retention events gen
 
 ### Python
 
-Python (>= 2.7), `pysam (>= 0.8.1)` packages
+Python (>= 2.7), `pysam (>= 0.8.1)`,[`annot_utils`](https://github.com/friend1ws/annot_utils) packages.
 
 ### Software
 
-bedtools (>= 2.20.0)
+[bedtools](http://bedtools.readthedocs.io/en/latest/), [hstlib](http://www.htslib.org)
 
 ## Install 
 ```
-git clone  https://github.com/Genomon-Project/GenomonIntronRetention.git
+git clone  https://github.com/friend1ws/intron_retention_util.git
 cd intron_retention_utils
 python setup.py build install
 ```
 
 ## Preparation
 
-For **simple_count** and **allele_count** commands, `refGene.txt.gz` file from UCSC is necessary:
-```
-wget http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/refGene.txt.gz
-```
-
+For **allele_count** command, a [Smith-Waterman shared library](https://github.com/mengyao/Complete-Striped-Smith-Waterman-Library) from Mengyao Zhao is necessary.
 Also, if your BAM file is aligned to reference genome using name convention other than UCSC,
-you need to set up correspondance file. For example, for making hg19-GRCh37 correspondance file):
-```
-cd resource
-bash make_ucsc_grch.sh
-```
-
-Also, for **allele_count** command, a [Smith-Waterman shared library](https://github.com/mengyao/Complete-Striped-Smith-Waterman-Library) from Mengyao Zhao is necessary.
 Create the `libssw.so` and add the path to the LD_LIBRARY_PATH environment variable.
-
-
 
 ## Commands
 
@@ -50,10 +37,12 @@ putative intron retention reads (that covering enlarged reagion by specified mar
 
 ```
 intron_retention_utils simple_count [-h] 
-                                      [-q mapping_qual_thres] 
-                                      [--chr_name_list chr_name_list.txt]
-                                      [--debug] 
-                                      sequence.bam output_file refGene.txt.gz
+                                    [--grc]
+                                    [--genome_id {hg19,hg38,mm10}]
+                                    [--intron_retention_check_size intron_retention_check_size]
+                                    [--mapping_qual_thres mapping_qual_thres]
+                                    [--keep_improper_pair] [--debug]
+                                    sequence.bam output_file
 ```
 
 #### About result
@@ -75,14 +64,16 @@ intron_retention_utils simple_count [-h]
 
 ```
 intron_retention_utils allele_count [-h] 
-                                      [--donor_size donor_size]
-                                      [--acceptor_size acceptor_size] 
-                                      [--chr_name_list chr_name_list.txt] 
-                                      [--template_size check_size] 
-                                      [--template_score_margin check_size]
-                                      [--read_search_margin read_search_margin]
-                                      [--debug]
-                                      sequence.bam mutation.txt output.txt reference.fa refGene.txt.gz
+                                    [--grc]
+                                    [--genome_id {hg19,hg38,mm10}]
+                                    [--donor_size donor_size]
+                                    [--acceptor_size acceptor_size]
+                                    [--template_size check_size]
+                                    [--template_score_margin check_size]
+                                    [--read_search_margin read_search_margin]
+                                    [--debug]
+                                    sequence.bam mutation.txt
+                                    output.txt reference.fa
 ```
 
 #### About result
@@ -108,16 +99,19 @@ intron_retention_utils allele_count [-h]
 Merge the intron retention file of control data (typically) for later filtering.
 
 ```
-intron_retention_utils merge_control [-h] [--ratio_thres RATIO_THRES]
-                                       [--sample_num_thres SAMPLE_NUM_THRES]
-                                       intron_retention_list.txt output_file
+intron_retention_utils merge_control [-h] 
+                                     [--ratio_thres RATIO_THRES]
+                                     [--sample_num_thres SAMPLE_NUM_THRES]
+                                     intron_retention_list.txt
+                                     output_file
 ```
 
 ### filter
 
 Filter out intron retentions that do not satisty specified conditions
 ```
-intron_retention_utils filter [-h] [--num_thres NUM_THRES]
+intron_retention_utils filter [-h] 
+                              [--num_thres NUM_THRES]
                               [--ratio_thres RATIO_THRES]
                               [--pooled_control_file POOLED_CONTROL_FILE]
                               intron_retention.txt output.txt
@@ -127,13 +121,15 @@ intron_retention_utils filter [-h] [--num_thres NUM_THRES]
 
 Associate intron retention counts (typically output of simple_count commands) with mutations
 ```
-intron_retention_utils associate [-h] [--donor_size donor_size]
+intron_retention_utils associate [-h] 
+                                 [--donor_size donor_size]
                                  [--acceptor_size acceptor_size]
                                  [--mutation_format {vcf,anno}]
                                  [--reference_genome reference.fa]
                                  [--sv] [--intron_margin intron_margin]
                                  [--debug]
-                                 intron_retention.txt mutation.txt output_file
+                                 intron_retention.txt mutation.txt
+                                 output_file
 ```
 
 #### About result
