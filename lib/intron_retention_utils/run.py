@@ -23,7 +23,7 @@ def simple_count_main(args):
                            args.output_file + ".refGene.edge_broaden.bed",
                            args.intron_retention_check_size)
 
-    simple_count.filterImproper(args.bam_file, args.output_file + ".filt.bam", args.mapping_qual_thres)
+    simple_count.filterImproper(args.bam_file, args.output_file + ".filt.bam", args.mapping_qual_thres, args.keep_improper_pair)
 
 
     hout = open(args.output_file + ".filt.bed12", 'w')

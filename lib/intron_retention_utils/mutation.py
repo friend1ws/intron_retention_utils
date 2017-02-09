@@ -66,7 +66,7 @@ def vcf2bed(mutation_file, output_file):
 
             # deletion
             if len(F[3]) > 1:
-                tstart, tend = F[1], str(int(F[1]) + len(F[3]))
+                tstart, tend = F[1], str(int(F[1]) + len(F[3]) - 1)
             # insertion
             elif len(F[4]) > 1:
                 tstart, tend = str(int(F[1]) - 1), F[1]

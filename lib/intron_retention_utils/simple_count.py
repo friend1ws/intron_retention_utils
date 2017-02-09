@@ -3,7 +3,7 @@
 import re, gzip
 import pysam
 
-def filterImproper(input_bam, output_bam, mapq_thres):
+def filterImproper(input_bam, output_bam, mapq_thres, keep_improper_pair):
 
     """
     This function is used for filtering short read with improper pairs,
@@ -19,7 +19,7 @@ def filterImproper(input_bam, output_bam, mapq_thres):
         flags = format(int(read.flag), "#014b")[:1:-1]
 
         # skip improper read pair
-        if flags[1] != "1": continue
+        if flags[1] != "1" and not keep_improper_pair: continue
 
         # skip if either of the read pair is unmapped
         if flags[2] == "1" or flags[3] == "1": continue

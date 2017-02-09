@@ -31,10 +31,13 @@ simple_count.add_argument("--genome_id", choices = ["hg19", "hg38", "mm10"], def
                           help = "the genome id used for selecting UCSC-GRC chromosome name corresponding files (default: %(default)s)")
 
 simple_count.add_argument("--intron_retention_check_size", metavar = "intron_retention_check_size", default = 10, type = int,
-                          help = "exon and intron region size to be covered by putative intron reads")
+                          help = "exon and intron region size to be covered by putative intron reads (default: %(default)s)")
 
-simple_count.add_argument("--mapping_qual_thres", metavar = "mapping_qual_thres", default='20', type=int,
-                          help = "threshold for mapping quality for calculating base counts")
+simple_count.add_argument("--mapping_qual_thres", metavar = "mapping_qual_thres", default= 20, type=int,
+                          help = "threshold for mapping quality for calculating base counts (default: %(default)s)")
+
+simple_count.add_argument("--keep_improper_pair", action = 'store_true', default = False,
+                          help = "keep improper paired reads (activate for single end reads) (default: %(default)s)")
 
 # simple_count.add_argument("--chr_name_list", metavar = "chr_name_list.txt", default = None, type = str,
 #                           help = "tab delimited chr name correspondance table (e.g., 1st column: UCSC names, 2nd column: GRCh names), \

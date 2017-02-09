@@ -446,7 +446,7 @@ def main2(query, target, min_score, nMatch = 2, nMismatch = 2, nOpen = 3, nExt =
 
             """
 
-            temp_type = re.sub(r'_\d$', '', sRId)
+            temp_type = re.sub(r'_\d+$', '', sRId)
             if int(resPrint[0]) > type2max_score[temp_type]:
                 type2max_score[temp_type] = int(resPrint[0])
      
