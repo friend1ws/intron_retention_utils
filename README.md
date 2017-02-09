@@ -2,7 +2,7 @@
 
 ## Introduction
 
-intron_retention_utils is a software for calculating intron retention events genome-wide from RNA sequencing data.
+`intron_retention_utils` is a software for calculating intron retention events genome-wide from RNA sequencing data.
 
 ## Dependency
 
