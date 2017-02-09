@@ -1,4 +1,4 @@
-# GenomonIntronRetention
+# intron_retention_utils
 
 ## Introduction
 
