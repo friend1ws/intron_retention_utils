@@ -27,7 +27,7 @@ def simple_count_main(args):
 
 
     hout = open(args.output_file + ".filt.bed12", 'w')
-    s_ret = subprocess.call(["bedtools", "bamtobed", "-bed12", "-i", args.output_file + ".filt.bam"], stdout = hout)
+    s_ret = subprocess.check_call(["bedtools", "bamtobed", "-bed12", "-i", args.output_file + ".filt.bam"], stdout = hout)
     hout.close()
 
     if s_ret != 0:
@@ -36,7 +36,7 @@ def simple_count_main(args):
 
 
     hout = open(args.output_file + ".edge.bed", 'w')
-    s_ret = subprocess.call(["bedtools", "intersect", "-a", args.output_file + ".filt.bed12", "-b", 
+    s_ret = subprocess.check_call(["bedtools", "intersect", "-a", args.output_file + ".filt.bed12", "-b", 
                              args.output_file + ".refGene.edge.bed.gz", "-split", "-wo"], stdout = hout) 
     hout.close()
 
@@ -46,7 +46,7 @@ def simple_count_main(args):
 
 
     hout = open(args.output_file + ".edge_broaden.bed", 'w')
-    s_ret = subprocess.call(["bedtools", "intersect", "-a", args.output_file + ".filt.bed12", "-b", 
+    s_ret = subprocess.check_call(["bedtools", "intersect", "-a", args.output_file + ".filt.bed12", "-b", 
                              args.output_file + ".refGene.edge_broaden.bed", "-split", "-wo"], stdout = hout) 
     hout.close()
 
@@ -67,18 +67,18 @@ def simple_count_main(args):
 
     # sort the result
     hout = open(args.output_file, 'a')
-    subprocess.call(["sort", "-k1,1", "-k2,2n", "-k3,3n", args.output_file + ".unsorted"], stdout = hout)
+    subprocess.check_call(["sort", "-k1,1", "-k2,2n", "-k3,3n", args.output_file + ".unsorted"], stdout = hout)
     hout.close()
 
     if not args.debug:
-        subprocess.call(["rm", "-rf", args.output_file + ".filt.bam"])
-        subprocess.call(["rm", "-rf", args.output_file + ".filt.bed12"])
-        subprocess.call(["rm", "-rf", args.output_file + ".refGene.edge.bed.gz"])
-        subprocess.call(["rm", "-rf", args.output_file + ".refGene.edge.bed.gz.tbi"])
-        subprocess.call(["rm", "-rf", args.output_file + ".refGene.edge_broaden.bed"])
-        subprocess.call(["rm", "-rf", args.output_file + ".edge.bed"])
-        subprocess.call(["rm", "-rf", args.output_file + ".edge_broaden.bed"])
-        subprocess.call(["rm", "-rf", args.output_file + ".unsorted"])
+        subprocess.check_call(["rm", "-rf", args.output_file + ".filt.bam"])
+        subprocess.check_call(["rm", "-rf", args.output_file + ".filt.bed12"])
+        subprocess.check_call(["rm", "-rf", args.output_file + ".refGene.edge.bed.gz"])
+        subprocess.check_call(["rm", "-rf", args.output_file + ".refGene.edge.bed.gz.tbi"])
+        subprocess.check_call(["rm", "-rf", args.output_file + ".refGene.edge_broaden.bed"])
+        subprocess.check_call(["rm", "-rf", args.output_file + ".edge.bed"])
+        subprocess.check_call(["rm", "-rf", args.output_file + ".edge_broaden.bed"])
+        subprocess.check_call(["rm", "-rf", args.output_file + ".unsorted"])
 
 
 def allele_count_main(args):
@@ -97,7 +97,7 @@ def allele_count_main(args):
     mutation.anno2bed(args.mutation_file, args.output_file + ".mutation_list.bed")
 
     hout = open(args.output_file + ".mutation_list.overlap.bed", 'w')
-    subprocess.call(["bedtools", "intersect", "-a", args.output_file + ".mutation_list.bed",
+    subprocess.check_call(["bedtools", "intersect", "-a", args.output_file + ".mutation_list.bed",
                      "-b", args.output_file + ".refGene.edge.bed.gz", "-wa", "-wb"], stdout = hout)
     hout.close()
     
@@ -137,18 +137,18 @@ def allele_count_main(args):
                              str(type2count["intron_retention_negative"]), str(type2count["intron_retention_positive"])])
             
             if not args.debug:
-                subprocess.call(["rm", "-rf", args.output_file + ".tmp.template_seq.fa" + str(cnum)])
-                subprocess.call(["rm", "-rf", args.output_file + ".tmp.read_seq.fa" + str(cnum)])
+                subprocess.check_call(["rm", "-rf", args.output_file + ".tmp.template_seq.fa" + str(cnum)])
+                subprocess.check_call(["rm", "-rf", args.output_file + ".tmp.read_seq.fa" + str(cnum)])
 
             cnum = cnum + 1
 
     hout.close()
 
     if not args.debug:
-        subprocess.call(["rm", "-rf", args.output_file + ".refGene.edge.bed.gz"])
-        subprocess.call(["rm", "-rf", args.output_file + ".refGene.edge.bed.gz.tbi"])
-        subprocess.call(["rm", "-rf", args.output_file + ".mutation_list.bed"])
-        subprocess.call(["rm", "-rf", args.output_file + ".mutation_list.overlap.bed"]) 
+        subprocess.check_call(["rm", "-rf", args.output_file + ".refGene.edge.bed.gz"])
+        subprocess.check_call(["rm", "-rf", args.output_file + ".refGene.edge.bed.gz.tbi"])
+        subprocess.check_call(["rm", "-rf", args.output_file + ".mutation_list.bed"])
+        subprocess.check_call(["rm", "-rf", args.output_file + ".mutation_list.overlap.bed"]) 
 
 
 def merge_control_main(args):
@@ -185,7 +185,7 @@ def merge_control_main(args):
                 
 
     hout = open(args.output_file + ".sorted", 'w')
-    s_ret = subprocess.call(["sort", "-k1,1", "-k2,2n", args.output_file + ".unsorted"], stdout = hout)
+    s_ret = subprocess.check_call(["sort", "-k1,1", "-k2,2n", args.output_file + ".unsorted"], stdout = hout)
     hout.close()
 
     if s_ret != 0:
@@ -219,7 +219,7 @@ def merge_control_main(args):
 
 
     hout = open(args.output_file, 'w')
-    s_ret = subprocess.call(["bgzip", "-f", "-c", args.output_file + ".merged"], stdout = hout)
+    s_ret = subprocess.check_call(["bgzip", "-f", "-c", args.output_file + ".merged"], stdout = hout)
     hout.close()
 
     if s_ret != 0:
@@ -227,14 +227,14 @@ def merge_control_main(args):
         sys.exit(1)
 
 
-    s_ret = subprocess.call(["tabix", "-p", "vcf", args.output_file])
+    s_ret = subprocess.check_call(["tabix", "-p", "vcf", args.output_file])
     if s_ret != 0:
         print >> sys.stderr, "Error in indexing merged junction file"
         sys.exit(1)
 
-    subprocess.call(["rm", "-f", args.output_file + ".unsorted"])
-    subprocess.call(["rm", "-f", args.output_file + ".sorted"])
-    subprocess.call(["rm", "-f", args.output_file + ".merged"])
+    subprocess.check_call(["rm", "-f", args.output_file + ".unsorted"])
+    subprocess.check_call(["rm", "-f", args.output_file + ".sorted"])
+    subprocess.check_call(["rm", "-f", args.output_file + ".merged"])
 
 
 def filter_main(args):
@@ -261,7 +261,7 @@ def associate_main(args):
             mutation.remove_vcf_header(args.mutation_file, args.output_file + ".tmp.mutation.unsorted.vcf")
 
         hout = open(args.output_file + ".tmp.mutation.sorted.vcf", 'w')
-        s_ret = subprocess.call(["sort", "-k1,1", "-k2,2n", args.output_file + ".tmp.mutation.unsorted.vcf"], stdout = hout)
+        s_ret = subprocess.check_call(["sort", "-k1,1", "-k2,2n", args.output_file + ".tmp.mutation.unsorted.vcf"], stdout = hout)
         hout.close()
 
         if s_ret != 0:
@@ -273,7 +273,7 @@ def associate_main(args):
         # mutation.anno2bed(args.mutation_file, args.output_file + ".mutation_list.bed")
        
         hout = open(args.output_file + ".mutation_list.associate.bed", 'w')
-        subprocess.call(["bedtools", "intersect", "-a", args.output_file + ".tmp.mutation.sorted.vcf.bed",
+        subprocess.check_call(["bedtools", "intersect", "-a", args.output_file + ".tmp.mutation.sorted.vcf.bed",
                          "-b", args.output_file + ".target_list.bed", "-wa", "-wb"], stdout = hout)
         hout.close()
 
@@ -282,12 +282,12 @@ def associate_main(args):
                                  args.output_file, args.donor_size, args.acceptor_size)
 
         if args.debug == False:
-            subprocess.call(["rm", "-rf", args.output_file + ".target_list.bed"])
-            subprocess.call(["rm", "-rf", args.output_file + ".intron_retention_file.header"])
-            subprocess.call(["rm", "-rf", args.output_file + ".tmp.mutation.unsorted.vcf"])
-            subprocess.call(["rm", "-rf", args.output_file + ".tmp.mutation.sorted.vcf"])
-            subprocess.call(["rm", "-rf", args.output_file + ".tmp.mutation.sorted.vcf.bed"])
-            subprocess.call(["rm", "-rf", args.output_file + ".mutation_list.associate.bed"])
+            subprocess.check_call(["rm", "-rf", args.output_file + ".target_list.bed"])
+            subprocess.check_call(["rm", "-rf", args.output_file + ".intron_retention_file.header"])
+            subprocess.check_call(["rm", "-rf", args.output_file + ".tmp.mutation.unsorted.vcf"])
+            subprocess.check_call(["rm", "-rf", args.output_file + ".tmp.mutation.sorted.vcf"])
+            subprocess.check_call(["rm", "-rf", args.output_file + ".tmp.mutation.sorted.vcf.bed"])
+            subprocess.check_call(["rm", "-rf", args.output_file + ".mutation_list.associate.bed"])
 
 
     else:
@@ -298,7 +298,7 @@ def associate_main(args):
         mutation.genosv2bed(args.mutation_file, args.output_file + ".tmp.unsorted.bedpe")
 
         hout = open(args.output_file + ".tmp.bedpe", 'w')
-        s_ret = subprocess.call(["sort", "-k1,1", "-k2,2n", "-k3,3n", "-k4,4", "-k5,5n", "-k6,6n", args.output_file + ".tmp.unsorted.bedpe"], stdout = hout)
+        s_ret = subprocess.check_call(["sort", "-k1,1", "-k2,2n", "-k3,3n", "-k4,4", "-k5,5n", "-k6,6n", args.output_file + ".tmp.unsorted.bedpe"], stdout = hout)
         hout.close()
 
         if s_ret != 0:
@@ -306,7 +306,7 @@ def associate_main(args):
             sys.exit(1)
 
         hout = open(args.output_file + ".sv_list.associate.bed", 'w')
-        subprocess.call(["bedtools", "intersect", "-a", args.output_file + ".tmp.bedpe",
+        subprocess.check_call(["bedtools", "intersect", "-a", args.output_file + ".tmp.bedpe",
                          "-b", args.output_file + ".target_list.bed", "-wa", "-wb"], stdout = hout)
         hout.close()
 
@@ -315,10 +315,10 @@ def associate_main(args):
                                     args.output_file)
 
         if args.debug == False:
-            subprocess.call(["rm", "-rf", args.output_file + ".target_list.bed"])
-            subprocess.call(["rm", "-rf", args.output_file + ".intron_retention_file.header"])
-            subprocess.call(["rm", "-rf", args.output_file + ".tmp.unsorted.bedpe"])
-            subprocess.call(["rm", "-rf", args.output_file + ".tmp.bedpe"])
-            subprocess.call(["rm", "-rf", args.output_file + ".sv_list.associate.bed"])
+            subprocess.check_call(["rm", "-rf", args.output_file + ".target_list.bed"])
+            subprocess.check_call(["rm", "-rf", args.output_file + ".intron_retention_file.header"])
+            subprocess.check_call(["rm", "-rf", args.output_file + ".tmp.unsorted.bedpe"])
+            subprocess.check_call(["rm", "-rf", args.output_file + ".tmp.bedpe"])
+            subprocess.check_call(["rm", "-rf", args.output_file + ".sv_list.associate.bed"])
 
 

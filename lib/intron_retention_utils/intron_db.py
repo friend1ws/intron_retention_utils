@@ -146,9 +146,9 @@ def generate_intron_retention_list(ref_gene_file, output_file, donor_size, accep
     hout.close()
 
     hout = open(output_file, 'w')
-    subprocess.call(["sort", "-k1,1", "-k2,2n", "-k3,3n", output_file + ".tmp"], stdout = hout)
+    subprocess.check_call(["sort", "-k1,1", "-k2,2n", "-k3,3n", output_file + ".tmp"], stdout = hout)
     hout.close()
 
-    subprocess.call(["rm", "-rf", output_file + ".tmp"])
+    subprocess.check_call(["rm", "-rf", output_file + ".tmp"])
 
 
