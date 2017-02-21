@@ -5,7 +5,7 @@ import argparse
 
 parser = argparse.ArgumentParser(prog = "intron_retention_utils")
 
-parser.add_argument("--version", action = "version", version = "intron_retention_utils-0.3.0rc2")
+parser.add_argument("--version", action = "version", version = "intron_retention_utils-0.3.0")
 
 subparsers = parser.add_subparsers()
 

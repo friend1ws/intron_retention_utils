@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name='intron_retention_utils',
-      version='0.3.0rc2',
+      version='0.3.0',
       description='Python tools for extracting intron retention events',
       author='Yuichi Shiraishi',
       author_email='friend1ws@gamil.com',
