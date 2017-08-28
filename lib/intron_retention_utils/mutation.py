@@ -2,6 +2,7 @@
 
 import sys, subprocess
 import pysam
+import my_seq
 
 def anno2vcf(input_file, output_file, reference):
 
@@ -18,21 +19,13 @@ def anno2vcf(input_file, output_file, reference):
         # insertion
         if F[3] == "-":
             # get the sequence for the reference base
-            seq = ""    
-            for item in pysam.faidx(reference, F[0] + ":" + str(F[1]) + "-" + str(F[1])).split('\n'):
-                seq = seq + item.rstrip('\n')
-            seq = seq.replace('>', '')
-            seq = seq.replace(F[0] + ":" + str(F[1]) + "-" + str(F[1]), '')
+            seq = my_seq.get_seq(reference, F[0], int(F[1]), int(F[1]))
             ref, alt = seq, seq + F[4]
 
         # deletion
         if F[4] == "-":
             # get the sequence for the reference base
-            seq = ""    
-            for item in pysam.faidx(reference, F[0] + ":" + str(int(F[1]) - 1) + "-" + str(int(F[1]) - 1)):
-                seq = seq + item.rstrip('\n')
-            seq = seq.replace('>', '')
-            seq = seq.replace(F[0] + ":" + str(int(F[1]) - 1) + "-" + str(int(F[1]) - 1), '')
+            seq = my_seq.get_seq(reference, F[0], int(F[1]) - 1, int(F[1]) - 1)
             pos, ref, alt = str(int(F[1]) - 1), seq + F[3], seq
 
         # QUAL = int(float(F[15]) * 10)
