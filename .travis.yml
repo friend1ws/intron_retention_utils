@@ -13,5 +13,4 @@ before_script:
 
 script:
   - pip install .
-  - which bedtools
   - python setup.py test 
