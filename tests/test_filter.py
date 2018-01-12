@@ -5,7 +5,7 @@ import os, tempfile, shutil, filecmp
 import intron_retention_utils
 from check_download import *
 
-class TestSimpleCount(unittest.TestCase):
+class TestFilter(unittest.TestCase):
 
     def setUp(self):
         self.parser = intron_retention_utils.parser.create_parser()

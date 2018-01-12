@@ -5,7 +5,7 @@ import os, glob, tempfile, shutil, filecmp
 import intron_retention_utils
 from check_download import *
 
-class TestFilter(unittest.TestCase):
+class TestMergeControl(unittest.TestCase):
 
     def setUp(self):
         self.parser = intron_retention_utils.parser.create_parser()
