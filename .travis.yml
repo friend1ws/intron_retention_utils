@@ -13,5 +13,5 @@ before_script:
 
 script:
   - pip install .
-  - bedtools intersect
- 
+  - which bedtools
+  - python setup.py test 
