@@ -20,7 +20,7 @@ class TestMergeControl(unittest.TestCase):
         cur_dir = os.path.dirname(os.path.abspath(__file__))
         tmp_dir = tempfile.mkdtemp()
 
-        all_simple_count_file = glob.glob(cur_dir + "/data/simple_count/*.ir_simple_count.result.txt")
+        all_simple_count_file = glob.glob(cur_dir + "/data/simple_count/*.chr21_chr22_20percent.ir_simple_count.result.txt")
         with open(tmp_dir + "/CCLE.ir_simple_count.reulst_list.txt", 'w') as hout:
             for simple_count_file in sorted(all_simple_count_file):
                 print >> hout, simple_count_file
