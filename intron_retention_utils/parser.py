@@ -57,7 +57,7 @@ def create_parser():
     allele_count.add_argument("output_file", metavar = "output.txt", default = None, type = str,
                               help = "the path to output file")
 
-    allele_count.add_argument("reference", metavar = "reference.fa", default = None, type = str,
+    allele_count.add_argument("--reference", metavar = "reference.fa", default = None, type = str, required = True,
                               help = "the path to the reference genome file")
 
     allele_count.add_argument("--grc", default = False, action = 'store_true',
