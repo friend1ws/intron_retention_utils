@@ -27,8 +27,9 @@ setup(
         'Topic :: Scientific/Engineering :: Bio-Informatics'
     ],
 
-    packages = find_packages(exclude = ['resource', 'fusion_db', 'cancer_gene']),
+    packages = find_packages(exclude = ['tests']),
     install_requires = [],
+
     entry_points = {'console_scripts': ['intron_retention_utils = intron_retention_utils:main']}
 
 )
