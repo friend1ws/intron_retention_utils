@@ -154,10 +154,10 @@ def create_parser():
                            help = "splicing donor site size (intronic region size, exonic region size) (default: %(default)s)")
 
     associate.add_argument('--mutation_format', choices=['vcf', 'anno'], default = 'vcf',
-                           help = "the format of mutation file vcf or annovar (tsv) format")
+                           help = "the format of mutation file vcf or annovar (tsv) format (default: %(default)s)")
 
-    associate.add_argument("--reference_genome", metavar = "reference.fa", type = str,
-                           help = "the path to the reference genomoe sequence (necessary for vcf format)")
+    associate.add_argument("--reference", metavar = "reference.fa", type = str, 
+                           help = "the path to the reference genomoe sequence (necessary when --mutation format is anno)")
 
     associate.add_argument('--sv', action='store_true',
                            help = "analysis structural variation file")

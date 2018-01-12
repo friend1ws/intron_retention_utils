@@ -256,7 +256,7 @@ def associate_main(args):
 
         # convert annovar format to vcf
         if args.mutation_format == "anno":
-            mutation.anno2vcf(args.mutation_file, args.output_file + ".tmp.mutation.unsorted.vcf", args.reference_genome)
+            mutation.anno2vcf(args.mutation_file, args.output_file + ".tmp.mutation.unsorted.vcf", args.reference)
         else:
             mutation.remove_vcf_header(args.mutation_file, args.output_file + ".tmp.mutation.unsorted.vcf")
 
