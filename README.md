@@ -122,15 +122,14 @@ intron_retention_utils filter [-h]
 
 Associate intron retention counts (typically output of simple_count commands) with mutations
 ```
-intron_retention_utils associate [-h] 
-                                 [--donor_size donor_size]
-                                 [--acceptor_size acceptor_size]
-                                 [--mutation_format {vcf,anno}]
-                                 [--reference_genome reference.fa]
-                                 [--sv] [--intron_margin intron_margin]
-                                 [--debug]
-                                 intron_retention.txt mutation.txt
-                                 output_file
+intron_retention_utils associate [-h] [--donor_size donor_size]
+                                        [--acceptor_size acceptor_size]
+                                        [--mutation_format {vcf,anno}]
+                                        [--reference reference.fa] [--sv]
+                                        [--intron_margin intron_margin]
+                                        [--debug]
+                                        intron_retention.txt mutation.txt
+                                        output_file
 ```
 
 #### About result
