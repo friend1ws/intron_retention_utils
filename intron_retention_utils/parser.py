@@ -7,7 +7,7 @@ def create_parser():
 
     parser = argparse.ArgumentParser(prog = "intron_retention_utils")
 
-    parser.add_argument("--version", action = "version", version = "intron_retention_utils-0.4.0a1")
+    parser.add_argument("--version", action = "version", version = "intron_retention_utils-0.4.0rc1")
 
     subparsers = parser.add_subparsers()
 
