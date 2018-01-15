@@ -9,7 +9,7 @@ A software for calculating intron retention events genome-wide from RNA sequenci
 
 ### Python
 
-Python (>= 2.7), `pysam (>= 0.8.1)`,[`annot_utils`](https://github.com/friend1ws/annot_utils) packages.
+Python (>= 2.7), `pysam`,[`annot_utils`](https://github.com/friend1ws/annot_utils) packages.
 
 ### Software
 
