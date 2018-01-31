@@ -11,7 +11,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name = 'intron_retention_utils',
-    version = '0.4.0rc1',
+    version = '0.4.0',
     description='Python tools for extracting intron retention events',
     url = 'https://github.com/friend1ws/intron_retention_utils',
     author = 'Yuichi Shiraishi',
