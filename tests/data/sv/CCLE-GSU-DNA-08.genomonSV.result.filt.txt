@@ -1,0 +1,26 @@
+# Version: GenomonSV-0.4.2rc sv_utils-0.4.0beta2
+# Analysis Date: 2017-07-12 09:37:45
+# User: ana
+Chr_1	Pos_1	Dir_1	Chr_2	Pos_2	Dir_2	Inserted_Seq	Variant_Type	Gene_1	Gene_2	Exon_1	Exon_2	Num_Tumor_Ref_Read_Pair	Num_Tumor_Var_Read_Pair	Tumor_VAF	Num_Control_Ref_Read_Pair	Num_Control_Var_Read_Pair	Control_VAF	Minus_Log_Fisher_P_value	Non-Matched_Control_Sample_With_Max_Junction	Num_Max_Non-Matched_Control_Junction	Max_Over_Hang_1	Max_Over_Hang_2
+1	36929661	-	1	36929683	+	---	tandem_duplication	MRPS15	MRPS15	---	---	174	118	0.4041	326	0	0.0	45.2433	---	0	333	192
+1	36929662	-	1	36929683	+	A	tandem_duplication	MRPS15	MRPS15	---	---	184	113	0.3805	326	0	0.0	42.3626	---	0	131	162
+1	55188492	+	1	55188517	-	---	deletion	TTC4;MROH7-TTC4	TTC4;MROH7-TTC4	---	---	30	8	0.2105	35	0	0.0	2.4391	---	0	209	60
+11	61114009	+	11	61114029	-	---	deletion	TKFC	TKFC	TKFC	TKFC	23	72	0.7579	80	0	0.0	28.4536	---	0	276	90
+16	48201497	+	16	48201525	-	---	deletion	ABCC11	ABCC11	ABCC11	ABCC11	7	61	0.8971	123	0	0.0	41.7642	---	0	290	171
+16	68867260	+	16	68867333	-	---	deletion	CDH1	CDH1	CDH1	CDH1	0	42	1.0	132	0	0.0	40.6117	---	0	213	290
+17	60005243	+	17	60005259	-	---	deletion	INTS2	INTS2	INTS2	INTS2	77	63	0.45	109	0	0.0	19.2598	---	0	61	189
+18	77488699	-	18	77488741	+	---	tandem_duplication	CTDP1	CTDP1	---	---	36	7	0.1628	41	0	0.0	2.1479	TCGA-06-0190-10	1	197	50
+20	3780858	-	20	3780876	+	AG	tandem_duplication	CDC25B	CDC25B	CDC25B	CDC25B	12	16	0.5714	35	0	0.0	7.0808	---	0	176	50
+21	33984570	+	21	33984612	-	---	deletion	C21orf59	C21orf59	C21orf59	C21orf59	3	5	0.625	15	0	0.0	2.7788	---	0	134	105
+3	28841772	-	3	72428385	-	---	inversion	---	RYBP	---	---	118	54	0.314	91	0	0.0	11.4771	---	0	293	313
+3	41266103	+	3	41266251	-	---	deletion	CTNNB1	CTNNB1	CTNNB1	---	41	11	0.2115	58	0	0.0	3.8487	---	0	213	124
+3	167754815	-	3	167754852	+	---	tandem_duplication	GOLIM4	GOLIM4	---	---	115	28	0.1958	60	0	0.0	4.6422	---	0	63	279
+3	186504806	+	3	186504832	-	---	deletion	EIF4A2	EIF4A2	---	---	38	34	0.4722	30	0	0.0	6.52	---	0	146	247
+5	176798791	-	5	176798807	+	---	tandem_duplication	RGS14	RGS14	---	---	22	6	0.2143	37	1	0.0263	1.7011	---	0	133	119
+7	82784850	-	7	82784879	+	---	tandem_duplication	PCLO	PCLO	PCLO	PCLO	73	8	0.0988	55	0	0.0	1.8643	---	0	133	220
+7	99818794	+	7	99818815	-	---	deletion	PVRIG;GATS	PVRIG;GATS	PVRIG	PVRIG	23	12	0.3429	27	0	0.0	3.4131	---	0	219	131
+8	12233484	+	8	12236143	-	---	deletion	FAM66A	FAM66A	---	---	54	19	0.2603	12	0	0.0	1.4269	---	0	55	201
+8	28159024	-	8	28309814	-	---	inversion	---	FBXO16	---	FBXO16	106	8	0.0702	91	0	0.0	2.0878	---	0	105	203
+8	96281484	-	8	96281494	+	---	tandem_duplication	C8orf37-AS1	C8orf37-AS1	---	---	57	16	0.2192	61	0	0.0	4.5863	---	0	58	197
+8	130763986	+	8	130764006	-	---	deletion	GSDMC	GSDMC	---	---	42	13	0.2364	44	0	0.0	3.6297	---	0	57	185
+9	8338852	-	9	8338865	+	---	tandem_duplication	PTPRD	PTPRD	---	---	62	42	0.4038	66	1	0.0149	9.5239	---	0	102	54
