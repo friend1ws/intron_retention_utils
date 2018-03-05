@@ -29,7 +29,7 @@ class TestAssociate(unittest.TestCase):
         output_file = tmp_dir + "/CCLE-HCC1954-RNA-08.ir_simple_count.associate.txt"
         ref_genome = cur_dir + "/resource/reference_genome/GRCh37.fa"
         answer_file = cur_dir + "/data/associate/CCLE-HCC1954-RNA-08.ir_simple_count.associate.txt"
- 
+
         args = self.parser.parse_args(["associate", simple_count_file, mutation_file, output_file, \
                                        "--mutation_format", "anno", "--reference", ref_genome])
         args.func(args)
@@ -40,6 +40,24 @@ class TestAssociate(unittest.TestCase):
 
 
     def test2(self):
+
+        cur_dir = os.path.dirname(os.path.abspath(__file__))
+        tmp_dir = tempfile.mkdtemp()
+
+        simple_count_file = cur_dir + "/data/simple_count/CCLE-HCC1954-RNA-08.ir_simple_count.result.txt"
+        mutation_file = cur_dir + "/data/mutation/CCLE-HCC1954-DNA-08.genomon_mutation.result.vcf"
+        output_file = tmp_dir + "/CCLE-HCC1954-RNA-08.ir_simple_count.associate.txt"
+        answer_file = cur_dir + "/data/associate/CCLE-HCC1954-RNA-08.ir_simple_count.associate.txt"
+
+        args = self.parser.parse_args(["associate", simple_count_file, mutation_file, output_file])
+        args.func(args)
+
+        self.assertTrue(filecmp.cmp(output_file, answer_file, shallow=False))
+
+        shutil.rmtree(tmp_dir)
+
+
+    def test3(self):
 
         cur_dir = os.path.dirname(os.path.abspath(__file__))
         tmp_dir = tempfile.mkdtemp()
