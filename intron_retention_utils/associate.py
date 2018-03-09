@@ -39,7 +39,7 @@ def generate_mutation_target(input_file, output_file, output_header, donor_size,
                 else:
                     start, end = boundary_pos - acceptor_size_exon, boundary_pos + acceptor_size_intron
 
-            print >> hout, '\t'.join([F[header2ind["Chr"]], str(start), str(end), "direct-impact"] + F)
+            print >> hout, '\t'.join([F[header2ind["Chr"]], str(start), str(end), "Direct impact"] + F)
 
             # opposite-side-impact 
             unique_junc_list = list(set(F[header2ind["Junction_List"]].split(',')))
@@ -68,7 +68,7 @@ def generate_mutation_target(input_file, output_file, output_header, donor_size,
                     else:
                         start, end = opposite_boundary_pos - acceptor_size_exon, opposite_boundary_pos + acceptor_size_intron
                         
-                print >> hout, '\t'.join([F[header2ind["Chr"]], str(start), str(end), "opposite-side-impact"] + F)
+                print >> hout, '\t'.join([F[header2ind["Chr"]], str(start), str(end), "Opposite side impact"] + F)
  
     hout.close()
 
@@ -139,14 +139,14 @@ def process_result(input_file, intron_retention_header_file, output_file, donor_
             mutation_key = F[3]
             motif_pos = F[4] + ':' + str(int(F[5]) + 1) + '-' + F[6] + ',' + F[12]
             
-            if (F[11] == "donor" and F[7] == "direct-impact") or (F[11] == "acceptor" and F[7] == "opposite-side-impact"):
-                motif_type = "splicing donor disruption"
-            elif (F[11] == "acceptor" and F[7] == "direct-impact") or (F[11] == "donor" and F[7] == "opposite-side-impact"): 
-                motif_type = "splicing acceptor disruption"
+            if (F[11] == "donor" and F[7] == "Direct impact") or (F[11] == "acceptor" and F[7] == "Opposite side impact"):
+                motif_type = "Donor disruption"
+            elif (F[11] == "acceptor" and F[7] == "Direct impact") or (F[11] == "donor" and F[7] == "Opposite side impact"): 
+                motif_type = "Acceptor disruption"
 
             # check cannonical
             mut_start, mut_end = int(F[1]) + 1, int(F[2])
-            if motif_type == "splicing donor disruption":
+            if motif_type == "Donor disruption":
                 if F[12] == '+':
                     canonical_start, canonical_end = int(F[5]) + donor_size_exon + 1, int(F[5]) + donor_size_exon + 2
                 else:
@@ -157,7 +157,7 @@ def process_result(input_file, intron_retention_header_file, output_file, donor_
                 else:
                     canonical_start, canonical_end = int(F[5]) + acceptor_size_exon + 1, int(F[5]) + acceptor_size_exon + 2
 
-            is_canonical = "canonical" if (mut_start <= canonical_end and mut_end >= canonical_start) else "non-canonical" 
+            is_canonical = "Canonical" if (mut_start <= canonical_end and mut_end >= canonical_start) else "Non-canonical" 
 
             print >> hout, '\t'.join(F[8:]) + '\t' + mutation_key + '\t' + motif_pos + '\t' + motif_type + '\t' + is_canonical + '\t' + F[7]
 
