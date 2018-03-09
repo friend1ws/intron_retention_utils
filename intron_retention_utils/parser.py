@@ -2,12 +2,13 @@
 
 from run import *
 import argparse
+from version import __version__
 
 def create_parser():
 
     parser = argparse.ArgumentParser(prog = "intron_retention_utils")
 
-    parser.add_argument("--version", action = "version", version = "intron_retention_utils-0.4.0")
+    parser.add_argument("--version", action = "version", version = "%(prog)s " + __version__)
 
     subparsers = parser.add_subparsers()
 
