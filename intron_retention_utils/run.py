@@ -1,13 +1,21 @@
 #! /usr/bin/env python
 
-import sys, os, subprocess
+import sys, os, subprocess, logger
 import intron_db
 import annot_utils.boundary
+from logger import get_logger
+logger = get_logger()
 
 def simple_count_main(args):
 
     import simple_count
+    from annot_utils.utils import grc_check
 
+    if args.grc == True:
+        logger.warning("--grc argument is deprecated and ignored")
+
+    is_grc = grc_check(args.bam_file)
+    
     output_dir = os.path.dirname(args.output_file)
     if output_dir != "" and not os.path.exists(output_dir):
        os.makedirs(output_dir)
@@ -17,7 +25,7 @@ def simple_count_main(args):
     # intron_db.generate_intron_retention_list(args.ref_gene_file, args.output_file + ".refGene.edge.bed", 
     #                                          "1,0", "0,1", args.chr_name_list)
 
-    annot_utils.boundary.make_boundary_info(args.output_file + ".refGene.edge.bed.gz", args.genome_id, args.grc, "1,0", "0,1")
+    annot_utils.boundary.make_boundary_info(args.output_file + ".refGene.edge.bed.gz", args.genome_id, is_grc, "1,0", "0,1")
 
     intron_db.broaden_edge(args.output_file + ".refGene.edge.bed.gz", 
                            args.output_file + ".refGene.edge_broaden.bed",
@@ -31,7 +39,7 @@ def simple_count_main(args):
     hout.close()
 
     if s_ret != 0:
-        print >> sys.stderr, "error in generating filt.bed12"
+        logger.error("Error in generating filt.bed12")
         sys.exit(1)
 
 
@@ -41,7 +49,7 @@ def simple_count_main(args):
     hout.close()
 
     if s_ret != 0:
-        print >> sys.stderr, "error in generating edge.bed"
+        logger.error("Error in generating edge.bed")
         sys.exit(1)
 
 
@@ -51,7 +59,7 @@ def simple_count_main(args):
     hout.close()
 
     if s_ret != 0:
-        print >> sys.stderr, "error in generating edge_broaden.bed"
+        logger.error("Error in generating edge_broaden.bed")
         sys.exit(1)
 
     simple_count.summarize_edge(args.output_file + ".edge.bed",
