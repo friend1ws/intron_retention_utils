@@ -12,7 +12,7 @@ def simple_count_main(args):
     from annot_utils.utils import grc_check
 
     if args.grc == True:
-        logger.warning("--grc argument is deprecated and ignored")
+        logger.warning("--grc argument is deprecated and ignored.")
 
     is_grc = grc_check(args.bam_file)
     
@@ -39,7 +39,7 @@ def simple_count_main(args):
     hout.close()
 
     if s_ret != 0:
-        logger.error("Error in generating filt.bed12")
+        logger.error("Error in generating filt.bed12.")
         sys.exit(1)
 
 
@@ -49,7 +49,7 @@ def simple_count_main(args):
     hout.close()
 
     if s_ret != 0:
-        logger.error("Error in generating edge.bed")
+        logger.error("Error in generating edge.bed.")
         sys.exit(1)
 
 
@@ -93,6 +93,14 @@ def allele_count_main(args):
 
     import mutation, allele_count, pyssw
 
+    from annot_utils.utils import grc_check
+
+    if args.grc == True:
+        logger.warning("--grc argument is deprecated and ignored.")
+
+    is_grc = grc_check(args.bam_file)
+
+
     output_dir = os.path.dirname(args.output_file)
     if output_dir != "" and not os.path.exists(output_dir):
        os.makedirs(output_dir)
@@ -100,7 +108,7 @@ def allele_count_main(args):
     # intron_db.generate_intron_retention_list(args.ref_gene_file, args.output_file + ".intron_retention_list.bed", 
     #                                          args.donor_size, args.acceptor_size, args.chr_name_list)
 
-    annot_utils.boundary.make_boundary_info(args.output_file + ".refGene.edge.bed.gz", args.genome_id, args.grc, args.donor_size, args.acceptor_size)
+    annot_utils.boundary.make_boundary_info(args.output_file + ".refGene.edge.bed.gz", args.genome_id, is_grc, args.donor_size, args.acceptor_size)
 
     mutation.anno2bed(args.mutation_file, args.output_file + ".mutation_list.bed")
 
@@ -197,7 +205,7 @@ def merge_control_main(args):
     hout.close()
 
     if s_ret != 0:
-        print >> sys.stderr, "Error in sorting merged junction file"
+        logger.error("Error in sorting merged junction file.")
         sys.exit(1)
 
     hout = open(args.output_file + ".merged", 'w')
@@ -231,13 +239,13 @@ def merge_control_main(args):
     hout.close()
 
     if s_ret != 0:
-        print >> sys.stderr, "Error in compression merged junction file"
+        logger.error("Error in compression merged intron retention file.")
         sys.exit(1)
 
 
     s_ret = subprocess.check_call(["tabix", "-p", "vcf", args.output_file])
     if s_ret != 0:
-        print >> sys.stderr, "Error in indexing merged junction file"
+        logger.error("Error in indexing merged intron retention file.")
         sys.exit(1)
 
     subprocess.check_call(["rm", "-f", args.output_file + ".unsorted"])
@@ -273,7 +281,7 @@ def associate_main(args):
         hout.close()
 
         if s_ret != 0:
-            print >> sys.stderr, "Error in sorting vcf file"
+            logger.error("Error in sorting vcf file.")
             sys.exit(1)
 
         mutation.vcf2bed(args.output_file + ".tmp.mutation.sorted.vcf", args.output_file + ".tmp.mutation.sorted.vcf.bed")
@@ -310,7 +318,7 @@ def associate_main(args):
         hout.close()
 
         if s_ret != 0:
-            print >> sys.stderr, "Error in sorting bedpe file"
+            logger.error("Error in sorting bedpe file.")
             sys.exit(1)
 
         hout = open(args.output_file + ".sv_list.associate.bed", 'w')
