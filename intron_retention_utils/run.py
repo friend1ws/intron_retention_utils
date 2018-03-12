@@ -265,13 +265,18 @@ def associate_main(args):
 
     is_sv = True if args.sv else False
 
+    if args.mutation_format == "anno":
+        logger.warning("--mutation_format is deprepaced and ignored.")
+
+    is_anno = False if args.mutation_format.endswith(".vcf") or args.mutation_format.endswith(".vcf.gz") else True
+
     if is_sv == False:
 
         associate.generate_mutation_target(args.intron_retention_file, args.output_file + ".target_list.bed",
                                            args.output_file + ".intron_retention_file.header", args.donor_size, args.acceptor_size)
 
         # convert annovar format to vcf
-        if args.mutation_format == "anno":
+        if is_anno:
             mutation.anno2vcf(args.mutation_file, args.output_file + ".tmp.mutation.unsorted.vcf", args.reference)
         else:
             mutation.remove_vcf_header(args.mutation_file, args.output_file + ".tmp.mutation.unsorted.vcf")
