@@ -217,13 +217,13 @@ def merge_control_main(args):
                     if F[header2ind["Edge_Read_Count"]] != "0":
                         intron_ratio = float(F[header2ind["Intron_Retention_Read_Count"]]) / float(F[header2ind["Edge_Read_Count"]])
        
-                    key = '\t'.join(F[:8]) 
+                    key = intron_retention_file + '\t' + '\t'.join(F[:8]) 
                     if intron_ratio >= args.ratio_thres: 
                         print(key + '\t' + str(round(intron_ratio, 3)) + '\t' + read_count, file = hout)
                 
 
     hout = open(args.output_file + ".sorted", 'w')
-    s_ret = subprocess.check_call(["sort", "-f", "-k1,1", "-k2,2n", "-k3,3", args.output_file + ".unsorted"], stdout = hout)
+    s_ret = subprocess.check_call(["sort", "-f", "-k2,2", "-k3,3n", "-k4,4", "-k1,1", args.output_file + ".unsorted"], stdout = hout)
     hout.close()
 
     if s_ret != 0:
@@ -236,9 +236,9 @@ def merge_control_main(args):
         temp_ratio = []
         for line in hin:
             F = line.rstrip('\n').split('\t')
-            key = '\t'.join(F[:8])
-            ratio = F[8]
-            read_count = F[9]
+            key = '\t'.join(F[1:9])
+            ratio = F[9]
+            read_count = F[10]
             if key != temp_key:
                 if temp_key != "":
                     if len(temp_ratio) >= args.sample_num_thres:
