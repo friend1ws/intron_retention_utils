@@ -3,7 +3,8 @@
 from __future__ import print_function
 import sys, subprocess
 import pysam
-import my_seq
+
+from . import my_seq
 
 def anno2vcf(input_file, output_file, reference):
 

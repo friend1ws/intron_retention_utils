@@ -2,7 +2,8 @@
 
 from __future__ import print_function
 import sys, re, pysam
-import my_seq
+
+from . import my_seq
 
 mut_seq_margin = 100
 

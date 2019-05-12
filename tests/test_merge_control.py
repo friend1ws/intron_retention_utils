@@ -4,7 +4,7 @@ from __future__ import print_function
 import unittest
 import os, glob, tempfile, shutil, filecmp
 import intron_retention_utils
-from check_download import *
+from .check_download import *
 
 class TestMergeControl(unittest.TestCase):
 

@@ -2,9 +2,11 @@
 
 from __future__ import print_function
 import sys, os, subprocess, logger
-import intron_db
+
 import annot_utils.boundary
-from logger import get_logger
+
+from . import intron_db
+from .logger import get_logger
 logger = get_logger()
 
 def simple_count_main(args):
