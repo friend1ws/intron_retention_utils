@@ -74,7 +74,7 @@ def generate_mutation_target(input_file, output_file, output_header, donor_size,
     hout.close()
 
     hout = open(output_file, 'w')
-    subprocess.check_call(["sort", "-k1,1", "-k2,2n", "-k3,3n", output_file + ".tmp"], stdout = hout)
+    subprocess.check_call(["sort", "-f", "-k1,1", "-k2,2n", "-k3,3n", output_file + ".tmp"], stdout = hout)
     hout.close()
 
     subprocess.check_call(["rm", "-rf", output_file + ".tmp"])
@@ -113,7 +113,7 @@ def generate_sv_target(input_file, output_file, output_header, intron_margin):
 
 
     hout = open(output_file, 'w')
-    subprocess.check_call(["sort", "-k1,1", "-k2,2n", "-k3,3n", output_file + ".tmp"], stdout = hout)
+    subprocess.check_call(["sort", "-f", "-k1,1", "-k2,2n", "-k3,3n", output_file + ".tmp"], stdout = hout)
     hout.close()
 
     subprocess.check_call(["rm", "-rf", output_file + ".tmp"])

@@ -78,7 +78,7 @@ def simple_count_main(args):
 
     # sort the result
     hout = open(args.output_file, 'a')
-    subprocess.check_call(["sort", "-k1,1", "-k2,2n", "-k3,3n", args.output_file + ".unsorted"], stdout = hout)
+    subprocess.check_call(["sort", "-f", "-k1,1", "-k2,2n", "-k3,3", args.output_file + ".unsorted"], stdout = hout)
     hout.close()
 
     if not args.debug:
@@ -178,7 +178,7 @@ def allele_count_main(args):
 
     # sort the result
     hout = open(args.output_file, 'a')
-    subprocess.check_call(["sort", "-k2,2", "-k3,3n", "-k1,1", args.output_file + ".unsorted"], stdout = hout)
+    subprocess.check_call(["sort", "-f", "-k2,2", "-k3,3n", "-k1,1", args.output_file + ".unsorted"], stdout = hout)
     hout.close()
 
 
@@ -305,7 +305,7 @@ def associate_main(args):
             mutation.remove_vcf_header(args.mutation_file, args.output_file + ".tmp.mutation.unsorted.vcf")
 
         hout = open(args.output_file + ".tmp.mutation.sorted.vcf", 'w')
-        s_ret = subprocess.check_call(["sort", "-k1,1", "-k2,2n", args.output_file + ".tmp.mutation.unsorted.vcf"], stdout = hout)
+        s_ret = subprocess.check_call(["sort", "-f", "-k1,1", "-k2,2n", args.output_file + ".tmp.mutation.unsorted.vcf"], stdout = hout)
         hout.close()
 
         if s_ret != 0:
