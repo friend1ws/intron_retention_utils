@@ -32,13 +32,16 @@ class TestSimpleCount(unittest.TestCase):
         input_bam = cur_dir + "/resource/bam/CCLE-HCC1954-RNA-08.chr21_chr22_20percent.Aligned.sortedByCoord.out.bam"
         output_file = tmp_dir + "/CCLE-HCC1954-RNA-08.chr21_chr22_20percent.ir_simple_count.result.txt"
         answer_file = cur_dir + "/data/simple_count/CCLE-HCC1954-RNA-08.chr21_chr22_20percent.ir_simple_count.result.txt"
+
+        print(output_file)
+        print(answer_file)
  
-        args = self.parser.parse_args(["simple_count", input_bam, output_file, "--grc"])
+        args = self.parser.parse_args(["simple_count", input_bam, output_file])
         args.func(args)
 
         self.assertTrue(filecmp.cmp(output_file, answer_file, shallow=False))
 
-        shutil.rmtree(tmp_dir)
+        # shutil.rmtree(tmp_dir)
 
 if __name__ == "__main__":
     unittest.main()

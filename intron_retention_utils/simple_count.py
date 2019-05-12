@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+from __future__ import print_function
 import re, gzip
 import pysam
 
@@ -72,7 +73,7 @@ def summarize_edge(edge_bed, edge_broaden_bed, output_file, margin):
     for key in list(set(edge2count.keys() + edge_broaden2count.keys())):
         count_edge = edge2count[key] if key in edge2count else 0
         count_edge_broaden = edge_broaden2count[key] if key in edge_broaden2count else 0
-        print >> hout, key + '\t' + str(count_edge) + '\t' + str(count_edge_broaden)
+        print(key + '\t' + str(count_edge) + '\t' + str(count_edge_broaden), file = hout)
 
 
 

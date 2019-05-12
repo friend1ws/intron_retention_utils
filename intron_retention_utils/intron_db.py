@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+from __future__ import print_function
 import gzip, subprocess
 
 # this is deprecated and now this package uses annot_utils
@@ -59,7 +60,7 @@ def generate_edge_bed(ref_gene_file, output_file, chr_name_list):
     hout = open(output_file, 'w')
     for junction in sorted(junction2annot):
         junc_info = junction.split('\t')
-        print >> hout, '\t'.join(junc_info[0:3]) + '\t' + junction2annot[junction] + '\t' + '0' + '\t' + junc_info[3]
+        print('\t'.join(junc_info[0:3]) + '\t' + junction2annot[junction] + '\t' + '0' + '\t' + junc_info[3], file = hout)
     hout.close()
 
 
@@ -71,9 +72,9 @@ def broaden_edge(input_file, output_file, margin):
             F = line.rstrip('\n').split('\t')
 
             if (F[4] == "donor" and F[5] == '+') or (F[4] == "acceptor" and F[5] == '-'):
-                print >> hout, F[0] + '\t' + str(int(F[1]) - margin + 1) + '\t' + str(int(F[2]) + margin) + '\t' + '\t'.join(F[3:])
+                print(F[0] + '\t' + str(int(F[1]) - margin + 1) + '\t' + str(int(F[2]) + margin) + '\t' + '\t'.join(F[3:]), file = hout)
             else:
-                print >> hout, F[0] + '\t' + str(int(F[1]) - margin) + '\t' + str(int(F[2]) + margin - 1) + '\t' + '\t'.join(F[3:])
+                print(F[0] + '\t' + str(int(F[1]) - margin) + '\t' + str(int(F[2]) + margin - 1) + '\t' + '\t'.join(F[3:]), file = hout)
 
     hout.close()
 
@@ -141,7 +142,7 @@ def generate_intron_retention_list(ref_gene_file, output_file, donor_size, accep
 
     hout = open(output_file + ".tmp", 'w')
     for key in sorted(key2junction):
-        print >> hout, '\t'.join([key, ','.join(key2junction[key]), ','.join(key2gene_id[key]), ','.join(key2exon_num[key])])
+        print('\t'.join([key, ','.join(key2junction[key]), ','.join(key2gene_id[key]), ','.join(key2exon_num[key])]), file = hout)
 
     hout.close()
 

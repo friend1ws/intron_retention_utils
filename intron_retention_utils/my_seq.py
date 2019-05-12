@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+from __future__ import print_function
 import sys, re
 import pysam
 
@@ -13,8 +14,8 @@ def get_seq(reference, chr, start, end):
     seq = seq.replace(chr + ":" + str(start) + "-" + str(end), '')
 
     if re.search(r'[^ACGTNacgtn]', seq) is not None:
-        print >> sys.stderr, "The return value in get_seq function includes non-nucleotide characters:"
-        print >> sys.stderr, seq
+        print("The return value in get_seq function includes non-nucleotide characters:", file = sys.stderr)
+        print(seq, file = sys.stderr)
         sys.exit(1)
 
 

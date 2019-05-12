@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+from __future__ import print_function
 import unittest
 import os, glob, tempfile, shutil, filecmp
 import intron_retention_utils
@@ -23,12 +24,12 @@ class TestMergeControl(unittest.TestCase):
         all_simple_count_file = glob.glob(cur_dir + "/data/simple_count/*.chr21_chr22_20percent.ir_simple_count.result.txt")
         with open(tmp_dir + "/CCLE.ir_simple_count.reulst_list.txt", 'w') as hout:
             for simple_count_file in sorted(all_simple_count_file):
-                print >> hout, simple_count_file
+                print(simple_count_file, file = hout)
 
         input_list_file = tmp_dir + "/CCLE.ir_simple_count.reulst_list.txt"
         output_file = tmp_dir + "/merge_control.bed.gz"
         answer_file = cur_dir + "/data/merge_control/merge_control.bed.gz"
- 
+
         args = self.parser.parse_args(["merge_control", input_list_file, output_file])
         args.func(args)
 

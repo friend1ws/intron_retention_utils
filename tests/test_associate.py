@@ -31,7 +31,7 @@ class TestAssociate(unittest.TestCase):
         answer_file = cur_dir + "/data/associate/CCLE-HCC1954-RNA-08.ir_simple_count.associate.txt"
 
         args = self.parser.parse_args(["associate", simple_count_file, mutation_file, output_file, \
-                                       "--mutation_format", "anno", "--reference", ref_genome])
+                                       "--reference", ref_genome])
         args.func(args)
 
         self.assertTrue(filecmp.cmp(output_file, answer_file, shallow=False))

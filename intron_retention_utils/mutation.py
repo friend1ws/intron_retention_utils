@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+from __future__ import print_function
 import sys, subprocess
 import pysam
 import my_seq
@@ -33,8 +34,8 @@ def anno2vcf(input_file, output_file, reference):
         # INFO = "TD=" + F[9] + ";TV=" + F[10] + ";ND=" + F[13] + ";NV=" + F[14] + ";SOMATIC"
         INFO = "SOMATIC"
 
-        print >> hout, F[0] + "\t" + pos + "\t.\t" + ref + "\t" + alt \
-            + "\t" + str(QUAL) + "\t" + "PASS" + "\t" + INFO 
+        print(F[0] + "\t" + pos + "\t.\t" + ref + "\t" + alt \
+           + "\t" + str(QUAL) + "\t" + "PASS" + "\t" + INFO, file = hout)
 
 
 def remove_vcf_header(input_file, output_file):
@@ -43,7 +44,7 @@ def remove_vcf_header(input_file, output_file):
     with open(input_file, 'r') as hin:
         for line in hin:
             line = line.rstrip('\n')
-            if not line.startswith('#'): print >> hout, line
+            if not line.startswith('#'): print(line, file = hout)
 
     hout.close()
 
@@ -67,7 +68,7 @@ def vcf2bed(mutation_file, output_file):
             elif len(F[3]) == 1 and len(F[4]) == 1:
                 tstart, tend = str(int(F[1]) - 1), F[1]
  
-            print >> hout, tchr + '\t' + tstart + '\t' + tend + '\t' + ','.join([F[0], F[1], F[3], F[4]])
+            print(tchr + '\t' + tstart + '\t' + tend + '\t' + ','.join([F[0], F[1], F[3], F[4]]), file = hout)
 
     hout.close()
 
@@ -82,7 +83,7 @@ def anno2bed(mutation_file, output_file):
             if F[0].startswith('#'): continue
             if F[0] == "Chr" and F[1] == "Start" and F[2] == "End" and F[3] == "Ref" and F[4] == "Alt": continue
 
-            print >> hout, '\t'.join([F[0], str(int(F[1]) - 1), F[2], F[3], F[4]])
+            print('\t'.join([F[0], str(int(F[1]) - 1), F[2], F[3], F[4]]), file = hout)
 
     hout.close()
 
@@ -110,8 +111,8 @@ def genosv2bed(input_file, output_file):
 
             key = ','.join([chr1, end1, dir1, chr2, end2, dir2, inseq])
 
-            print >> hout, '\t'.join([chr1, start1, end1, dir1, key])
-            print >> hout, '\t'.join([chr2, start2, end2, dir2, key])
+            print('\t'.join([chr1, start1, end1, dir1, key]), file = hout)
+            print('\t'.join([chr2, start2, end2, dir2, key]), file = hout)
 
     hout.close()
 

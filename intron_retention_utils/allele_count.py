@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+from __future__ import print_function
 import sys, re, pysam
 import my_seq
 
@@ -59,9 +60,9 @@ def generate_template_seq(output_file, reference, mut_chr, mut_start, mut_end, m
 
             # for debug
             if mut_ref != '-' and mut_seq_tmp[mut_start_rel:(mut_end_rel + 1)] != mut_ref:
-                print >> sys.stderr, '\t'.join([mut_chr, str(mut_start), str(mut_end), mut_ref, mut_alt, junc])
-                print >> sys.stderr, '\t'.join([mut_seq_tmp[mut_start_rel:(mut_end_rel + 1)], mut_ref])
-                print >> sys.stderr, "mutation inconsistent!!!"
+                print('\t'.join([mut_chr, str(mut_start), str(mut_end), mut_ref, mut_alt, junc]), file = sys.stderr)
+                print('\t'.join([mut_seq_tmp[mut_start_rel:(mut_end_rel + 1)], mut_ref]), file = sys.stderr)
+                print("mutation inconsistent!!!", file = sys.stderr)
                 sys.exit(1) 
 
             # SNV
@@ -107,10 +108,10 @@ def generate_template_seq(output_file, reference, mut_chr, mut_start, mut_end, m
 
         # for debug
         if mut_seq_tmp[mut_start_rel] != mut_ref:
-            print '\t'.join([mut_chr, str(mut_start), str(mut_end), mut_ref, mut_alt])
-            print mut_seq_tmp
-            print mut_start_rel
-            print >> sys.stderr, "mutation inconsistent!!!"
+            print('\t'.join([mut_chr, str(mut_start), str(mut_end), mut_ref, mut_alt]))
+            print(mut_seq_tmp)
+            print(mut_start_rel)
+            print("mutation inconsistent!!!", file = sys.stderr)
             sys.exit(1)
         mut_seq_tmp = mut_seq_tmp[:mut_start_rel] + mut_alt + mut_seq_tmp[(mut_end_rel + 1):]
 
@@ -123,8 +124,8 @@ def generate_template_seq(output_file, reference, mut_chr, mut_start, mut_end, m
 
         # for debug
         if mut_seq_tmp[mut_start_rel:(mut_end_rel + 1)] != mut_ref != '-':
-            print '\t'.join([mut_chr, str(mut_start), str(mut_end), mut_ref, mut_alt])
-            print >> sys.stderr, "mutation inconsistent!!!"
+            print('\t'.join([mut_chr, str(mut_start), str(mut_end), mut_ref, mut_alt]))
+            print("mutation inconsistent!!!", file = sys.stderr)
             sys.exit(1)
         mut_seq_tmp = mut_seq_tmp[:mut_start_rel] + mut_seq_tmp[(mut_end_rel + 1):]
  
@@ -146,7 +147,7 @@ def generate_template_seq(output_file, reference, mut_chr, mut_start, mut_end, m
 
     hout = open(output_file, 'w')
     for key in sorted(key2seq):
-        print >> hout, ">" + key + '\n' + key2seq[key]
+        print(">" + key + '\n' + key2seq[key], file = hout)
     
     hout.close()
  
@@ -172,7 +173,7 @@ def extract_read_around_boundary(bam_file, output_file, reference, motif_chr, mo
 
         read_id = read.qname + '/1' if flags[6] == '1' else read.qname + '/2'
         
-        print >> hout, '>' + read_id + '\n' + read.seq
+        print('>' + read_id + '\n' + read.seq, file = hout)
 
     bamfile.close()
     hout.close()

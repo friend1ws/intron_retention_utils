@@ -37,8 +37,8 @@ class TestAlleleCount(unittest.TestCase):
         ref_genome = cur_dir + "/resource/reference_genome/GRCh37.fa"
         output_file = tmp_dir + "/CCLE-HCC1143-RNA-08.chr21_chr22_20percent.ir_allele_count.result.txt"
         answer_file = cur_dir + "/data/allele_count/CCLE-HCC1143-RNA-08.chr21_chr22_20percent.ir_allele_count.result.txt"
- 
-        args = self.parser.parse_args(["allele_count", input_bam, mutation_file, output_file, "--reference", ref_genome, "--grc"])
+
+        args = self.parser.parse_args(["allele_count", input_bam, mutation_file, output_file, "--reference", ref_genome])
         args.func(args)
 
         self.assertTrue(filecmp.cmp(output_file, answer_file, shallow=False))

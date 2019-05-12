@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+from __future__ import print_function
 import sys, re, subprocess
 
 def generate_mutation_target(input_file, output_file, output_header, donor_size, acceptor_size):
@@ -16,7 +17,7 @@ def generate_mutation_target(input_file, output_file, output_header, donor_size,
             header2ind[cname] = i
 
         hout_header = open(output_header, 'w')
-        print >> hout_header, '\t'.join(header)
+        print('\t'.join(header), file = hout_header)
         hout_header.close()
 
 
@@ -39,7 +40,7 @@ def generate_mutation_target(input_file, output_file, output_header, donor_size,
                 else:
                     start, end = boundary_pos - acceptor_size_exon, boundary_pos + acceptor_size_intron
 
-            print >> hout, '\t'.join([F[header2ind["Chr"]], str(start), str(end), "Direct impact"] + F)
+            print('\t'.join([F[header2ind["Chr"]], str(start), str(end), "Direct impact"] + F), file = hout)
 
             # opposite-side-impact 
             unique_junc_list = list(set(F[header2ind["Junction_List"]].split(',')))
@@ -68,7 +69,7 @@ def generate_mutation_target(input_file, output_file, output_header, donor_size,
                     else:
                         start, end = opposite_boundary_pos - acceptor_size_exon, opposite_boundary_pos + acceptor_size_intron
                         
-                print >> hout, '\t'.join([F[header2ind["Chr"]], str(start), str(end), "Opposite side impact"] + F)
+                print('\t'.join([F[header2ind["Chr"]], str(start), str(end), "Opposite side impact"] + F), file = hout)
  
     hout.close()
 
@@ -90,7 +91,7 @@ def generate_sv_target(input_file, output_file, output_header, intron_margin):
             header2ind[cname] = i
 
         hout_header = open(output_header, 'w')
-        print >> hout_header, '\t'.join(header)
+        print('\t'.join(header), file = hout_header)
         hout_header.close()
 
         for line in hin:
@@ -101,12 +102,12 @@ def generate_sv_target(input_file, output_file, output_header, intron_margin):
 
                 junc_match = re.match(r'([^ \t\n\r\f\v,]+)\:(\d+)\-(\d+)', junc)
                 if junc_match is None:
-                    print >> sys.stderr, "junction mismatch at " + '\n' + '\t'.join(F)
+                    print("junction mismatch at " + '\n' + '\t'.join(F), file = sys.stderr)
                     sys.exit(1)
 
                 jchr, jstart, jend = junc_match.group(1), int(junc_match.group(2)), int(junc_match.group(3))
 
-                print >> hout, '\t'.join([jchr, str(jstart - intron_margin), str(jend + intron_margin)] + F)
+                print('\t'.join([jchr, str(jstart - intron_margin), str(jend + intron_margin)] + F), file = hout)
 
     hout.close()
 
@@ -130,7 +131,7 @@ def process_result(input_file, intron_retention_header_file, output_file, donor_
         intron_retention_header = hin.readline().rstrip('\n')
         
 
-    print >> hout, intron_retention_header + '\t' + '\t'.join(["Mutation_Key", "Motif_Pos", "Mutation_Type", "Is_Canonical", "Intron_Retention_Type"])
+    print(intron_retention_header + '\t' + '\t'.join(["Mutation_Key", "Motif_Pos", "Mutation_Type", "Is_Canonical", "Intron_Retention_Type"]), file = hout)
 
     with open(input_file, 'r') as hin:
         for line in hin:
@@ -159,7 +160,7 @@ def process_result(input_file, intron_retention_header_file, output_file, donor_
 
             is_canonical = "Canonical" if (mut_start <= canonical_end and mut_end >= canonical_start) else "Non-canonical" 
 
-            print >> hout, '\t'.join(F[8:]) + '\t' + mutation_key + '\t' + motif_pos + '\t' + motif_type + '\t' + is_canonical + '\t' + F[7]
+            print('\t'.join(F[8:]) + '\t' + mutation_key + '\t' + motif_pos + '\t' + motif_type + '\t' + is_canonical + '\t' + F[7], file = hout)
 
     hout.close()
 
@@ -173,7 +174,7 @@ def process_result_sv(input_file, intron_retention_header_file, output_file):
         intron_retention_header = hin.readline().rstrip('\n')
 
 
-    print >> hout, intron_retention_header + '\t' + "SV_Key"
+    print(intron_retention_header + '\t' + "SV_Key", file = hout)
 
     with open(input_file, 'r') as hin:
         for line in hin:
@@ -195,7 +196,7 @@ def process_result_sv(input_file, intron_retention_header_file, output_file):
 
             if consistent_flag == 1: continue
             """
-            print >> hout, '\t'.join(F[8:]) + '\t' + sv_key
+            print('\t'.join(F[8:]) + '\t' + sv_key, file = hout)
 
     hout.close()
 

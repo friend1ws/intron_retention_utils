@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+from __future__ import print_function
 import pysam
 
 def filter_intron_retention(input_file, output_file, control_file, num_thres, ratio_thres):
@@ -15,7 +16,7 @@ def filter_intron_retention(input_file, output_file, control_file, num_thres, ra
         for i, cname in enumerate(header):
             header2ind[cname] = i
 
-        print >> hout, '\t'.join(header)
+        print('\t'.join(header), file = hout)
 
         for line in hin:
 
@@ -49,7 +50,7 @@ def filter_intron_retention(input_file, output_file, control_file, num_thres, ra
 
                 if control_flag == 1: continue
 
-            print >> hout, '\t'.join(F)
+            print('\t'.join(F), file = hout)
  
 
     hout.close()

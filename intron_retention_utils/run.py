@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+from __future__ import print_function
 import sys, os, subprocess, logger
 import intron_db
 import annot_utils.boundary
@@ -69,8 +70,8 @@ def simple_count_main(args):
 
     # print header
     hout = open(args.output_file, 'w')
-    print >> hout, '\t'.join(["Chr", "Boundary_Pos", "Gene_Symbol", "Motif_Type", "Strand", 
-                              "Junction_List", "Gene_ID_List", "Exon_Num_List", "Edge_Read_Count", "Intron_Retention_Read_Count"])
+    print('\t'.join(["Chr", "Boundary_Pos", "Gene_Symbol", "Motif_Type", "Strand", 
+        "Junction_List", "Gene_ID_List", "Exon_Num_List", "Edge_Read_Count", "Intron_Retention_Read_Count"]), file = hout)
     hout.close()
 
     # sort the result
@@ -116,16 +117,19 @@ def allele_count_main(args):
     subprocess.check_call(["bedtools", "intersect", "-a", args.output_file + ".mutation_list.bed",
                      "-b", args.output_file + ".refGene.edge.bed.gz", "-wa", "-wb"], stdout = hout)
     hout.close()
-    
+   
+    """ 
     cnum = 0
     hout = open(args.output_file, 'w')
     # print header
-    print >> hout, '\t'.join(["Gene_Symbol", "Chr_Mut", "Start_Mut", "End_Mut", "Ref_Mut", "Alt_Mut", 
-                              "Chr_Motif", "Start_Motif", "End_Motif", "Type_Motif", "Strand_Motif",
-                              "Splice_Junction_Negative", "Splice_Junction_Positive",
-                              "Intron_Retention_Negative", "Intron_Retention_Positive"])
+    print('\t'.join(["Gene_Symbol", "Chr_Mut", "Start_Mut", "End_Mut", "Ref_Mut", "Alt_Mut", 
+                     "Chr_Motif", "Start_Motif", "End_Motif", "Type_Motif", "Strand_Motif",
+                     "Splice_Junction_Negative", "Splice_Junction_Positive",
+                     "Intron_Retention_Negative", "Intron_Retention_Positive"]), file = hout)
+    """
 
-
+    cnum = 0
+    hout = open(args.output_file + ".unsorted", 'w')
     with open(args.output_file + ".mutation_list.overlap.bed", 'r') as hin:
         for line in hin:
             F = line.rstrip('\n').split('\t')
@@ -147,10 +151,10 @@ def allele_count_main(args):
             type2count = pyssw.main2(args.output_file + ".tmp.read_seq.fa" + str(cnum), args.output_file + ".tmp.template_seq.fa" + str(cnum), 
                                      4 * args.template_size - args.template_score_margin)
 
-            print >> hout, '\t'.join([motif_gene, mut_chr, str(mut_start), str(mut_end), mut_ref, mut_alt, 
-                             motif_chr, str(motif_start), str(motif_end), motif_type, motif_strand,
-                             str(type2count["splice_junction_negative"]), str(type2count["splice_junction_positive"]),
-                             str(type2count["intron_retention_negative"]), str(type2count["intron_retention_positive"])])
+            print('\t'.join([motif_gene, mut_chr, str(mut_start), str(mut_end), mut_ref, mut_alt, 
+                motif_chr, str(motif_start), str(motif_end), motif_type, motif_strand,
+                str(type2count["splice_junction_negative"]), str(type2count["splice_junction_positive"]),
+                str(type2count["intron_retention_negative"]), str(type2count["intron_retention_positive"])]), file = hout)
             
             if not args.debug:
                 subprocess.check_call(["rm", "-rf", args.output_file + ".tmp.template_seq.fa" + str(cnum)])
@@ -160,12 +164,28 @@ def allele_count_main(args):
 
     hout.close()
 
+
+    hout = open(args.output_file, 'w')
+    # print header
+    print('\t'.join(["Gene_Symbol", "Chr_Mut", "Start_Mut", "End_Mut", "Ref_Mut", "Alt_Mut", 
+                     "Chr_Motif", "Start_Motif", "End_Motif", "Type_Motif", "Strand_Motif",
+                     "Splice_Junction_Negative", "Splice_Junction_Positive",
+                     "Intron_Retention_Negative", "Intron_Retention_Positive"]), file = hout)
+    hout.close()
+
+
+    # sort the result
+    hout = open(args.output_file, 'a')
+    subprocess.check_call(["sort", "-k2,2", "-k3,3n", "-k1,1", args.output_file + ".unsorted"], stdout = hout)
+    hout.close()
+
+
     if not args.debug:
         subprocess.check_call(["rm", "-rf", args.output_file + ".refGene.edge.bed.gz"])
         subprocess.check_call(["rm", "-rf", args.output_file + ".refGene.edge.bed.gz.tbi"])
         subprocess.check_call(["rm", "-rf", args.output_file + ".mutation_list.bed"])
         subprocess.check_call(["rm", "-rf", args.output_file + ".mutation_list.overlap.bed"]) 
-
+        subprocess.check_call(["rm", "-rf", args.output_file + ".unsorted"])
 
 def merge_control_main(args):
 
@@ -197,11 +217,11 @@ def merge_control_main(args):
        
                     key = '\t'.join(F[:8]) 
                     if intron_ratio >= args.ratio_thres: 
-                        print >> hout, key + '\t' + str(round(intron_ratio, 3)) + '\t' + read_count
+                        print(key + '\t' + str(round(intron_ratio, 3)) + '\t' + read_count, file = hout)
                 
 
     hout = open(args.output_file + ".sorted", 'w')
-    s_ret = subprocess.check_call(["sort", "-k1,1", "-k2,2n", args.output_file + ".unsorted"], stdout = hout)
+    s_ret = subprocess.check_call(["sort", "-f", "-k1,1", "-k2,2n", args.output_file + ".unsorted"], stdout = hout)
     hout.close()
 
     if s_ret != 0:
@@ -220,18 +240,19 @@ def merge_control_main(args):
             if key != temp_key:
                 if temp_key != "":
                     if len(temp_ratio) >= args.sample_num_thres:
-                        print >> hout, temp_key + '\t' + ';'.join(temp_ratio) + '\t' + ';'.join(temp_read_count) 
+                        print(temp_key + '\t' + ';'.join(temp_ratio) + '\t' + ';'.join(temp_read_count), file = hout)
+
                 temp_key = key
                 temp_ratio = []
                 temp_read_count = []
-            else:
-                temp_ratio.append(str(ratio))
-                temp_read_count.append(read_count)
+                
+            temp_ratio.append(str(ratio))
+            temp_read_count.append(read_count)
 
         if key != temp_key:
             if temp_key != "":
                 if len(temp_ratio) >= sample_num_thres:
-                    print >> hout, temp_key + '\t' + ';'.join(temp_ratio) + '\t' + ';'.join(temp_read_count)
+                    print(temp_key + '\t' + ';'.join(temp_ratio) + '\t' + ';'.join(temp_read_count), file = hout)
 
 
     hout = open(args.output_file, 'w')
