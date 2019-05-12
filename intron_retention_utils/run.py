@@ -223,7 +223,7 @@ def merge_control_main(args):
                 
 
     hout = open(args.output_file + ".sorted", 'w')
-    s_ret = subprocess.check_call(["sort", "-f", "-k1,1", "-k2,2n", args.output_file + ".unsorted"], stdout = hout)
+    s_ret = subprocess.check_call(["sort", "-f", "-k1,1", "-k2,2n", "-k3,3", args.output_file + ".unsorted"], stdout = hout)
     hout.close()
 
     if s_ret != 0:
