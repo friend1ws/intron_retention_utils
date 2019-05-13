@@ -8,7 +8,6 @@ Modified by Yuichi Shiraishi for python3 compatibility (May 2019)
 """
 
 from __future__ import print_function
-from builtins import range
 
 import sys, os, re
 import os.path as op
@@ -20,6 +19,11 @@ import math
 
 from . import ssw_lib
 
+import sys
+
+if sys.version_info.major == 2:
+    range = xrange
+    
 
 
 
