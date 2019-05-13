@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 """
 Simple python wrapper for SSW library
 Please put the path of libssw.so into LD_LIBRARY_PATH or pass it explicitly as a parameter
@@ -8,7 +9,6 @@ Modified by Yuichi Shiraishi for python3 compatibility (May 2019)
 """
 
 from __future__ import print_function
-from __future__ import generator_stop
 
 import sys, os, re
 import os.path as op
@@ -521,3 +521,4 @@ if __name__ == '__main__':
 
 if __name__ == '__main__':
     main2(sys.argv[1], sys.argv[2], int(sys.argv[3]))
+    
