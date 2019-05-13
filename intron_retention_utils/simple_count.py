@@ -70,7 +70,7 @@ def summarize_edge(edge_bed, edge_broaden_bed, output_file, margin):
 
 
     hout = open(output_file, 'w')
-    for key in list(set(edge2count.keys() + edge_broaden2count.keys())):
+    for key in list(set(list(edge2count) + list(edge_broaden2count))):
         count_edge = edge2count[key] if key in edge2count else 0
         count_edge_broaden = edge_broaden2count[key] if key in edge_broaden2count else 0
         print(key + '\t' + str(count_edge) + '\t' + str(count_edge_broaden), file = hout)

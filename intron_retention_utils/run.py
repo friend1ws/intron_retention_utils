@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 from __future__ import print_function
-import sys, os, subprocess, logger
+import sys, os, subprocess
 
 import annot_utils.boundary
 
@@ -11,7 +11,7 @@ logger = get_logger()
 
 def simple_count_main(args):
 
-    import simple_count
+    from . import simple_count
     from annot_utils.utils import grc_check
 
     if args.grc == True:
@@ -94,7 +94,7 @@ def simple_count_main(args):
 
 def allele_count_main(args):
 
-    import mutation, allele_count, pyssw
+    from . import mutation, allele_count, pyssw
 
     from annot_utils.utils import grc_check
 
@@ -195,9 +195,7 @@ def merge_control_main(args):
     if os.path.dirname(args.output_file) != "" and not os.path.exists(os.path.dirname(args.output_file)):
         os.makedirs(os.path.dirname(args.output_file))
 
-    hin = open(args.intron_retention_list, 'r')
     hout = open(args.output_file + ".unsorted", 'w')
-
     header2ind = {}
     with open(args.intron_retention_list, 'r') as hin:
         for line in hin:
@@ -220,7 +218,7 @@ def merge_control_main(args):
                     key = intron_retention_file + '\t' + '\t'.join(F[:8]) 
                     if intron_ratio >= args.ratio_thres: 
                         print(key + '\t' + str(round(intron_ratio, 3)) + '\t' + read_count, file = hout)
-                
+    hout.close()            
 
     hout = open(args.output_file + ".sorted", 'w')
     s_ret = subprocess.check_call(["sort", "-f", "-k2,2", "-k3,3n", "-k4,4", "-k1,1", args.output_file + ".unsorted"], stdout = hout)
@@ -255,6 +253,7 @@ def merge_control_main(args):
             if temp_key != "":
                 if len(temp_ratio) >= sample_num_thres:
                     print(temp_key + '\t' + ';'.join(temp_ratio) + '\t' + ';'.join(temp_read_count), file = hout)
+    hout.close()
 
 
     hout = open(args.output_file, 'w')
@@ -278,13 +277,13 @@ def merge_control_main(args):
 
 def filter_main(args):
 
-    import filter
+    from . import filter
     filter.filter_intron_retention(args.intron_retention_file, args.output_file, args.pooled_control_file, args.num_thres, args.ratio_thres)
 
 
 def associate_main(args):
     
-    import mutation, associate
+    from . import mutation, associate
 
     is_sv = True if args.sv else False
 

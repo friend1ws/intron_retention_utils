@@ -67,7 +67,7 @@ def generate_edge_bed(ref_gene_file, output_file, chr_name_list):
 def broaden_edge(input_file, output_file, margin):
 
     hout = open(output_file, 'w')
-    with gzip.open(input_file, 'r') as hin:
+    with gzip.open(input_file, 'rt') as hin:
         for line in hin:
             F = line.rstrip('\n').split('\t')
 

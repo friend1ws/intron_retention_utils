@@ -37,7 +37,7 @@ class TestMergeControl(unittest.TestCase):
         print("answer_file:", answer_file, os.stat(answer_file))
         self.assertTrue(filecmp.cmp(output_file, answer_file, shallow=False))
 
-        shutil.rmtree(tmp_dir)
+        # shutil.rmtree(tmp_dir)
 
 if __name__ == "__main__":
     unittest.main()

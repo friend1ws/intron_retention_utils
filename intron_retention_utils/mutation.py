@@ -37,6 +37,9 @@ def anno2vcf(input_file, output_file, reference):
 
         print(F[0] + "\t" + pos + "\t.\t" + ref + "\t" + alt \
            + "\t" + str(QUAL) + "\t" + "PASS" + "\t" + INFO, file = hout)
+    
+    hin.close()
+    hout.close()
 
 
 def remove_vcf_header(input_file, output_file):

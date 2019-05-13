@@ -8,6 +8,8 @@ Modified by Yuichi Shiraishi for python3 compatibility (May 2019)
 """
 
 from __future__ import print_function
+from builtins import range
+
 import sys, os, re
 import os.path as op
 import argparse as ap
@@ -174,7 +176,7 @@ def buildPath(q, r, nQryBeg, nRefBeg, lCigar):
 
         if c == 'M':
             sQ += q[nQOff : nQOff+n]
-            sA += ''.join(['|' if q[nQOff+j] == r[nROff+j] else '*' for j in xrange(n)])
+            sA += ''.join(['|' if q[nQOff+j] == r[nROff+j] else '*' for j in range(n)])
             sR += r[nROff : nROff+n]
             nQOff += n
             nROff += n
@@ -209,9 +211,9 @@ def main(args):
                 dEle2Int[ele.lower()] = i
                 dInt2Ele[i] = ele
             nEleNum = len(lEle)
-            lScore = [0 for i in xrange(nEleNum**2)]
-            for i in xrange(nEleNum-1):
-                for j in xrange(nEleNum-1):
+            lScore = [0 for i in range(nEleNum**2)]
+            for i in range(nEleNum-1):
+                for j in range(nEleNum-1):
                     if lEle[i] == lEle[j]:
                         lScore[i*nEleNum+j] = args.nMatch
                     else:
@@ -380,9 +382,9 @@ def main2(query, target, min_score, nMatch = 2, nMismatch = 2, nOpen = 3, nExt =
         dEle2Int[ele.lower()] = i
         dInt2Ele[i] = ele
     nEleNum = len(lEle)
-    lScore = [0 for i in xrange(nEleNum**2)]
-    for i in xrange(nEleNum-1):
-        for j in xrange(nEleNum-1):
+    lScore = [0 for i in range(nEleNum**2)]
+    for i in range(nEleNum-1):
+        for j in range(nEleNum-1):
             if lEle[i] == lEle[j]:
                 lScore[i*nEleNum+j] = nMatch
             else:
