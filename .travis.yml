@@ -17,6 +17,7 @@ before_script:
 
   - pip install annot_utils
   - pip install pysam
+  - pip install requests
   - cat /etc/issue
 
 script:
