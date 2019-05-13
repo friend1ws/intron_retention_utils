@@ -15,7 +15,7 @@ before_script:
   - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD
   - cd ../..
 
-  - pip install annot_utils
+  - pip install annot_utils==0.3.0b3
   - pip install pysam
   - pip install requests
   - cat /etc/issue
