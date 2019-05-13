@@ -8,6 +8,7 @@ Modified by Yuichi Shiraishi for python3 compatibility (May 2019)
 """
 
 from __future__ import print_function
+from __future__ import generator_stop
 
 import sys, os, re
 import os.path as op
@@ -19,11 +20,13 @@ import math
 
 from . import ssw_lib
 
-import sys
-
 if sys.version_info.major == 2:
     range = xrange
     
+try:
+    from builtins import object
+except ImportError:
+    pass
 
 
 
@@ -61,18 +64,19 @@ def read(sFile):
         sQual = ''
         for l in f:
             sId = l.strip()[1:].split()[0]
-            sSeq = f.next()
-            s3 = f.next()
-            sQual = f.next()
+            sSeq = next(f)
+            s3 = next(f)
+            sQual = next(f)
 
             yield sId, sSeq, sQual
+
 
 # test if fasta or fastq
     bFasta = True
     ext = op.splitext(sFile)[1][1:].strip().lower()
     if ext == 'gz' or ext == 'gzip':
         with gzip.open(sFile, 'r') as f:
-            l = f.next()
+            l = next(f)
             if l.startswith('>'):
                 bFasta = True
             elif l.startswith('@'):
@@ -82,7 +86,7 @@ def read(sFile):
                 sys.exit()
     else:
         with open(sFile, 'r') as f:
-            l = f.next()
+            l = next(f)
             if l.startswith('>'):
                 bFasta = True
             elif l.startswith('@'):
@@ -270,7 +274,7 @@ def main(args):
             qRcProfile = ssw.ssw_init(qRcNum, ct.c_int32(len(sQSeq)), mat, len(lEle), 2)
 # set mask len
         if len(sQSeq) > 30:
-            nMaskLen = len(sQSeq) / 2
+            nMaskLen = int(len(sQSeq) / 2)
         else:
             nMaskLen = 15
 
@@ -425,7 +429,7 @@ def main2(query, target, min_score, nMatch = 2, nMismatch = 2, nOpen = 3, nExt =
 
         # set mask len
         if len(sQSeq) > 30:
-            nMaskLen = len(sQSeq) / 2
+            nMaskLen = int(len(sQSeq) / 2)
         else:
             nMaskLen = 15
 

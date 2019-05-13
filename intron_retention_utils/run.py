@@ -9,6 +9,12 @@ from . import intron_db
 from .logger import get_logger
 logger = get_logger()
 
+try:
+    from builtins import round
+except ImportError:
+    pass
+
+
 def simple_count_main(args):
 
     from . import simple_count
