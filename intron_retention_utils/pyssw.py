@@ -23,11 +23,6 @@ from . import ssw_lib
 if sys.version_info.major == 2:
     range = xrange
     
-try:
-    from builtins import object
-except ImportError:
-    pass
-
 
 
 def read(sFile):
@@ -42,6 +37,7 @@ def read(sFile):
         """
         sId = ''
         sSeq = ''
+        """
         for l in f:
             if l.startswith('>'):
                 if sSeq:
@@ -50,6 +46,26 @@ def read(sFile):
                 sSeq = ''
             else:
                 sSeq += l.strip()
+        """
+        for line in f:
+            if line.startswith('>'):
+                if sSeq:
+                    yield sId, sSeq, ''
+                sId = line.rstrip('\n')[1:].split()[0]
+                sSeq = ''
+            else:
+                sSeq += line
+
+        """
+        for l in f:
+            if l.startswith('>'):
+                if sSeq:
+                    yield sId, sSeq, ''
+                sId = l.strip()[1:].split()[0]
+                sSeq = ''
+            else:
+                sSeq += l.strip()
+        """
 
         yield sId, sSeq, ''
 
@@ -62,6 +78,7 @@ def read(sFile):
         sSeq = ''
         s3 = ''
         sQual = ''
+        """
         for l in f:
             sId = l.strip()[1:].split()[0]
             sSeq = next(f)
@@ -69,32 +86,54 @@ def read(sFile):
             sQual = next(f)
 
             yield sId, sSeq, sQual
+        """
 
+        sId = f.readline()
+
+        while sId:
+            sId = sId.rstrip('\n').split()[0]
+            sSeq = f.readline().rstrip('\n')
+            line = f.readline().rstrip('\n')
+            sQual = f.readline().rstrip('\n')
+            yield sId, sSeq, sQual
+            sId = f.readline()
+
+        f.close()
+        
 
 # test if fasta or fastq
     bFasta = True
     ext = op.splitext(sFile)[1][1:].strip().lower()
     if ext == 'gz' or ext == 'gzip':
-        with gzip.open(sFile, 'r') as f:
-            l = next(f)
+        with gzip.open(sFile, 'rt') as f:
+            l = f.readline().rstrip('\n')
+            # l = next(f)
             if l.startswith('>'):
                 bFasta = True
+            else:
+                bFasta = False
+            """
             elif l.startswith('@'):
                 bFasta = False
             else:
                 print('file format cannot be recognized', file = sys.stderr)
                 sys.exit()
+            """
     else:
         with open(sFile, 'r') as f:
-            l = next(f)
+            l = f.readline().rstrip('\n')
+            # l = next(f)
             if l.startswith('>'):
                 bFasta = True
+            else:
+                bFasta = False
+            """
             elif l.startswith('@'):
                 bFasta = False
             else:
                 print('file format cannot be recognized', file = sys.stderr)
                 sys.exit()
-
+            """
 # read
     if ext == 'gz' or ext == 'gzip':
         with gzip.open(sFile, 'r') as f:

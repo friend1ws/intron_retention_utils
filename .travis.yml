@@ -20,7 +20,6 @@ before_script:
   - pip install annot_utils==0.3.0b3
   - pip install pysam
   - pip install requests
-  - pip install future
   - cat /etc/issue
 
 script:
