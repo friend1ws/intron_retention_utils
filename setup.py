@@ -21,6 +21,8 @@ setup(
     name = 'intron_retention_utils',
     version = get_version(),
     description='Python tools for extracting intron retention events',
+    long_description=long_description, 
+    long_description_content_type='text/markdown',     
     url = 'https://github.com/friend1ws/intron_retention_utils',
     author = 'Yuichi Shiraishi',
     author_email = 'friend1ws@gamil.com',
@@ -32,6 +34,8 @@ setup(
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Operating System :: Unix',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',    
         'Topic :: Scientific/Engineering :: Bio-Informatics'
     ],
 
