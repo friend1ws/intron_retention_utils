@@ -16,6 +16,12 @@ A software for calculating intron retention events genome-wide from RNA sequenci
 [bedtools](http://bedtools.readthedocs.io/en/latest/), [hstlib](http://www.htslib.org)
 
 ## Install 
+
+```
+pip install intron_retention_utils
+```
+
+Alternatively, you can install from the source code.
 ```
 git clone  https://github.com/friend1ws/intron_retention_util.git
 cd intron_retention_utils
