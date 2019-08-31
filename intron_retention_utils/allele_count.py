@@ -178,7 +178,7 @@ def extract_read_around_boundary(bam_file, output_file, reference, motif_chr, mo
     bamfile = pysam.AlignmentFile(bam_file, 'rb')
 
     read_count = bamfile.count(motif_chr, max(0, motif_start - read_search_margin), motif_end + read_search_margin, read_callback = check_read)
-    read_ind_list = random.sample(range(min(read_count, max_count)), max_count)
+    read_ind_list = random.sample(range(read_count), min(max_count, read_count))
     read_inds = {}
     for i in read_ind_list:
         read_inds[i] = 1
