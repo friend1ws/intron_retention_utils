@@ -154,23 +154,46 @@ def generate_template_seq(output_file, reference, mut_chr, mut_start, mut_end, m
  
 
     
-def extract_read_around_boundary(bam_file, output_file, reference, motif_chr, motif_start, motif_end, read_search_margin):
+def extract_read_around_boundary(bam_file, output_file, reference, motif_chr, motif_start, motif_end, read_search_margin, max_count = 10000):
 
-    bamfile = pysam.Samfile(bam_file, 'rb')
-    hout = open(output_file, 'w') 
-    for read in bamfile.fetch(motif_chr, max(0, motif_start - read_search_margin), motif_end + read_search_margin):
+    def check_read(read):
+
+        check_flag = True 
 
         # get the flag information
         flags = format(int(read.flag), "#014b")[:1:-1]
-
-        # skip unmapped read 
-        if flags[2] == "1" or flags[3] == "1": continue 
-
+    
+        # skip unmapped read  
+        if flags[2] == "1" or flags[3] == "1": check_flag = False
+     
         # skip supplementary alignment
-        if flags[8] == "1" or flags[11] == "1": continue
+        if flags[8] == "1" or flags[11] == "1": check_flag = False
 
         # skip duplicated reads
-        if flags[10] == "1": continue
+        if flags[10] == "1": check_flag = False
+
+        return(check_flag)
+
+
+    bamfile = pysam.AlignmentFile(bam_file, 'rb')
+
+    read_count = bamfile.count(motif_chr, max(0, motif_start - read_search_margin), motif_end + read_search_margin, read_callback = check_read)
+    read_ind_list = random.sample(range(min(read_count, max_count)), max_count)
+    read_inds = {}
+    for i in read_ind_list:
+        read_inds[i] = 1
+
+    ind = -1
+    hout = open(output_file, 'w') 
+    for read in bamfile.fetch(motif_chr, max(0, motif_start - read_search_margin), motif_end + read_search_margin):
+
+        if not check_read(read): continue
+
+        ind = ind + 1
+        if not ind in read_inds: continue
+
+        # get the flag information
+        flags = format(int(read.flag), "#014b")[:1:-1]
 
         read_id = read.qname + '/1' if flags[6] == '1' else read.qname + '/2'
         
