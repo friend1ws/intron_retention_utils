@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 from __future__ import print_function
-import sys, re, pysam
+import sys, re, random, pysam
 
 from . import my_seq
 
