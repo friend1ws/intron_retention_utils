@@ -156,13 +156,17 @@ def allele_count_main(args):
                                                       args.reference, motif_chr, motif_start, motif_end, args.read_search_margin)
 
             # perform smith-waterman alignment check
-            type2count = pyssw.main2(args.output_file + ".tmp.read_seq.fa" + str(cnum), args.output_file + ".tmp.template_seq.fa" + str(cnum), 
-                                     4 * args.template_size - args.template_score_margin)
+            type2count, ir_pos_supporting_reads = pyssw.main2(args.output_file + ".tmp.read_seq.fa" + str(cnum), args.output_file + ".tmp.template_seq.fa" + str(cnum), 
+                                                              4 * args.template_size - args.template_score_margin)
+
+            max_overhang_size = allele_count.get_max_overhang_size(ir_pos_supporting_reads, motif_start, motif_end, motif_type, motif_strand, 
+                                                                   args.donor_size, args.acceptor_size)
 
             print('\t'.join([motif_gene, mut_chr, str(mut_start), str(mut_end), mut_ref, mut_alt, 
                 motif_chr, str(motif_start), str(motif_end), motif_type, motif_strand,
                 str(type2count["splice_junction_negative"]), str(type2count["splice_junction_positive"]),
-                str(type2count["intron_retention_negative"]), str(type2count["intron_retention_positive"])]), file = hout)
+                str(type2count["intron_retention_negative"]), str(type2count["intron_retention_positive"]), 
+                str(max_overhang_size)]), file = hout)
             
             if not args.debug:
                 subprocess.check_call(["rm", "-rf", args.output_file + ".tmp.template_seq.fa" + str(cnum)])
@@ -178,7 +182,7 @@ def allele_count_main(args):
     print('\t'.join(["Gene_Symbol", "Chr_Mut", "Start_Mut", "End_Mut", "Ref_Mut", "Alt_Mut", 
                      "Chr_Motif", "Start_Motif", "End_Motif", "Type_Motif", "Strand_Motif",
                      "Splice_Junction_Negative", "Splice_Junction_Positive",
-                     "Intron_Retention_Negative", "Intron_Retention_Positive"]), file = hout)
+                     "Intron_Retention_Negative", "Intron_Retention_Positive", "IR_Posivite_Max_Overhang"]), file = hout)
     hout.close()
 
 

@@ -458,6 +458,7 @@ def main2(query, target, min_score, nMatch = 2, nMismatch = 2, nOpen = 3, nExt =
 
     type2count = {"splice_junction_positive": 0, "splice_junction_negative": 0,
                   "intron_retention_positive": 0, "intron_retention_negative": 0}
+    intron_retention_positive_supporting_reads = []
 
     # iterate query sequence
     for sQId,sQSeq,sQQual in read(query):
@@ -525,8 +526,10 @@ def main2(query, target, min_score, nMatch = 2, nMismatch = 2, nOpen = 3, nExt =
         if target_max_score == target_second_max_score: continue
  
         type2count[target_max_type] = type2count[target_max_type] + 1
- 
-    return type2count
+        if target_max_type == "intron_retention_positive":
+            intron_retention_positive_supporting_reads.append(sQId)
+
+    return type2count, intron_retention_positive_supporting_reads
 
 """
 if __name__ == '__main__':

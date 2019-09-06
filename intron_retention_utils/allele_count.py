@@ -195,10 +195,82 @@ def extract_read_around_boundary(bam_file, output_file, reference, motif_chr, mo
         # get the flag information
         flags = format(int(read.flag), "#014b")[:1:-1]
 
-        read_id = read.qname + '/1' if flags[6] == '1' else read.qname + '/2'
-        
+        read_id = read.qname + '_1' if flags[6] == '1' else read.qname + '_2'
+        read_id = read_id + '_' + str(read.reference_start + 1) + '_' + str(read.reference_end) + '_' + str(read.cigarstring) 
         print('>' + read_id + '\n' + read.seq, file = hout)
 
     bamfile.close()
     hout.close()
- 
+
+
+def get_max_overhang_size(supprting_reads, motif_start, motif_end, motif_type, motif_strand, donor_size, acceptor_size): 
+
+    if len(supprting_reads) == 0:
+        return 0
+
+    donor_size_exon, donor_size_intron = [int(x) for x in donor_size.split(',')]
+    acceptor_size_intron, acceptor_size_exon = [int(x) for x in acceptor_size.split(',')]
+
+    if motif_type == "donor":
+        if motif_strand == '+':
+            # motif_exon_start, motif_exon_end = motif_start, motif_start + donor_size_exon - 1
+            # motif_intron_start, motif_intron_end = motif_start + donor_size_exon, motif_start + donor_size_exon + donor_size_intron - 1
+            intron_start_pos = motif_start + donor_size_exon
+        else:
+            # motif_intron_start, motif_intron_end = motif_start, motif_start + donor_size_intron - 1
+            # motif_exon_start, motif_exon_end = motif_start + donor_size_intron, motif_start + donor_size_exon + donor_size_intron - 1
+            intron_start_pos = motif_start + donor_size_intron - 1
+    else: # acceptor
+        if motif_strand == '+':
+            # motif_intron_start, motif_intron_end = motif_start, motif_start + acceptor_size_intron - 1
+            # motif_exon_start, motif_exon_end = motif_start + acceptor_size_intron, motif_start + acceptor_size_exon + acceptor_size_intron - 1
+            intron_start_pos = motif_start + acceptor_size_intron - 1
+        else:
+            # motif_exon_start, motif_exon_end = motif_start, motif_start + acceptor_size_exon - 1
+            # motif_intron_start, motif_intron_end = motif_start + acceptor_size_exon, motif_start + acceptor_size_exon + acceptor_size_intron - 1
+            intron_start_pos = motif_start + acceptor_size_exon
+
+
+    max_overhang_size = 0
+    for sread in supprting_reads:
+        sread_info = sread.split('_')
+        sread_start, sread_end, sread_cigarstring = int(sread_info[-3]), int(sread_info[-2]), sread_info[-1]
+
+        regions = []
+        cur_pos, cur_region_start = sread_start, sread_start
+        for match in re.finditer(r'(\d+)([MIDNS])', sread_cigarstring):
+            if match.group(2) in ['S', 'I']: continue
+            if match.group(2) in ['M', 'D']:
+                cur_pos = cur_pos + int(match.group(1))
+            if match.group(2) == 'N':
+                regions.append((cur_region_start, cur_pos - 1))
+                cur_pos = cur_pos + int(match.group(1))
+                cur_region_start = cur_pos
+        regions.append((cur_region_start, cur_pos - 1))
+    
+        # import pdb; pdb.set_trace()
+        if cur_pos - 1 != sread_end:
+            print("Inconsistency in start, end and cigar", file = sys.stderr)
+            sys.exit(1)
+
+        overhang_size = 0  
+        for region_elm in regions:
+            region_start, region_end = region_elm[0], region_elm[1]
+            if region_start <= intron_start_pos and intron_start_pos <= region_end:
+                if motif_type == "donor":
+                    if motif_strand == '+':
+                        overhang_size = region_end - intron_start_pos + 1
+                    else:
+                        overhang_size = intron_start_pos - region_start + 1
+                else: # acceptor
+                    if motif_strand == '+': 
+                        overhang_size = intron_start_pos - region_start + 1
+                    else:
+                        overhang_size = region_end - intron_start_pos + 1
+
+        if overhang_size > max_overhang_size:
+            # print(motif_start, motif_end, motif_type, motif_strand, intron_start_pos, sread, overhang_size)
+            max_overhang_size = overhang_size
+
+    return max_overhang_size
+
