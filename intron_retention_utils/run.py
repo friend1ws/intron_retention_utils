@@ -30,41 +30,17 @@ def simple_count_main(args):
        os.makedirs(output_dir)
 
 
-    # intron_db.generate_edge_bed(args.ref_gene_file, output_prefix + ".refGene.edge.bed", args.chr_name_list)
-    # intron_db.generate_intron_retention_list(args.ref_gene_file, args.output_file + ".refGene.edge.bed", 
-    #                                          "1,0", "0,1", args.chr_name_list)
-
     annot_utils.boundary.make_boundary_info(args.output_file + ".refGene.edge.bed.gz", args.genome_id, is_grc, "1,0", "0,1")
 
     intron_db.broaden_edge(args.output_file + ".refGene.edge.bed.gz", 
                            args.output_file + ".refGene.edge_broaden.bed",
                            args.intron_retention_check_size)
 
-    simple_count.filterImproper(args.bam_file, args.output_file + ".filt.bam", args.mapping_qual_thres, args.keep_improper_pair)
-
-
-    hout = open(args.output_file + ".filt.bed12", 'w')
-    s_ret = subprocess.check_call(["bedtools", "bamtobed", "-bed12", "-i", args.output_file + ".filt.bam"], stdout = hout)
-    hout.close()
-
-    if s_ret != 0:
-        logger.error("Error in generating filt.bed12.")
-        sys.exit(1)
-
-
-    hout = open(args.output_file + ".edge.bed", 'w')
-    s_ret = subprocess.check_call(["bedtools", "intersect", "-a", args.output_file + ".filt.bed12", "-b", 
-                             args.output_file + ".refGene.edge.bed.gz", "-split", "-wo"], stdout = hout) 
-    hout.close()
-
-    if s_ret != 0:
-        logger.error("Error in generating edge.bed.")
-        sys.exit(1)
-
+    simple_count.filterImproper(args.bam_file, args.output_file + ".filt.bam", args.keep_improper_pair)
 
     hout = open(args.output_file + ".edge_broaden.bed", 'w')
-    s_ret = subprocess.check_call(["bedtools", "intersect", "-a", args.output_file + ".filt.bed12", "-b", 
-                             args.output_file + ".refGene.edge_broaden.bed", "-split", "-wo"], stdout = hout) 
+    s_ret = subprocess.check_call(["bedtools", "intersect", "-a", args.output_file + ".filt.bam", "-b",
+                               args.output_file + ".refGene.edge_broaden.bed", "-split", "-wo", "-bed"], stdout = hout)
     hout.close()
 
     if s_ret != 0:
@@ -74,7 +50,8 @@ def simple_count_main(args):
     simple_count.summarize_edge(args.output_file + ".edge.bed",
                                 args.output_file + ".edge_broaden.bed",
                                 args.output_file + ".unsorted",
-                                args.intron_retention_check_size)
+                                args.intron_retention_check_size,
+                                args.mapping_qual_thres)
 
     # print header
     hout = open(args.output_file, 'w')
@@ -89,11 +66,9 @@ def simple_count_main(args):
 
     if not args.debug:
         subprocess.check_call(["rm", "-rf", args.output_file + ".filt.bam"])
-        subprocess.check_call(["rm", "-rf", args.output_file + ".filt.bed12"])
         subprocess.check_call(["rm", "-rf", args.output_file + ".refGene.edge.bed.gz"])
         subprocess.check_call(["rm", "-rf", args.output_file + ".refGene.edge.bed.gz.tbi"])
         subprocess.check_call(["rm", "-rf", args.output_file + ".refGene.edge_broaden.bed"])
-        subprocess.check_call(["rm", "-rf", args.output_file + ".edge.bed"])
         subprocess.check_call(["rm", "-rf", args.output_file + ".edge_broaden.bed"])
         subprocess.check_call(["rm", "-rf", args.output_file + ".unsorted"])
 
