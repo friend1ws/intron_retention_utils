@@ -36,10 +36,13 @@ def simple_count_main(args):
                            args.output_file + ".refGene.edge_broaden.bed",
                            args.intron_retention_check_size)
 
-    simple_count.filterImproper(args.bam_file, args.output_file + ".filt.bam", args.keep_improper_pair)
+    if not args.pass_bam_filt:
+        simple_count.filterImproper(args.bam_file, args.output_file + ".filt.bam", args.keep_improper_pair)
 
+
+    intersect_abam = args.bam_file if args.pass_bam_filt else args.output_file + ".filt.bam"
     hout = open(args.output_file + ".edge_broaden.bed", 'w')
-    s_ret = subprocess.check_call(["bedtools", "intersect", "-a", args.output_file + ".filt.bam", "-b",
+    s_ret = subprocess.check_call(["bedtools", "intersect", "-a", intersect_abam, "-b",
                                args.output_file + ".refGene.edge_broaden.bed", "-split", "-wo", "-bed"], stdout = hout)
     hout.close()
 
@@ -65,7 +68,7 @@ def simple_count_main(args):
     hout.close()
 
     if not args.debug:
-        subprocess.check_call(["rm", "-rf", args.output_file + ".filt.bam"])
+        if not args.pass_bam_filt: subprocess.check_call(["rm", "-rf", args.output_file + ".filt.bam"])
         subprocess.check_call(["rm", "-rf", args.output_file + ".refGene.edge.bed.gz"])
         subprocess.check_call(["rm", "-rf", args.output_file + ".refGene.edge.bed.gz.tbi"])
         subprocess.check_call(["rm", "-rf", args.output_file + ".refGene.edge_broaden.bed"])

@@ -39,6 +39,9 @@ def create_parser():
     simple_count.add_argument("--keep_improper_pair", action = 'store_true', default = False,
                               help = "Keep improper paired reads (activate for single end reads) (default: %(default)s)")
 
+    simple_count.add_argument("--pass_bam_filt", action = 'store_true', default = False,
+                              help = "Skip the bam filtering step where improer pairs, duplicated reads and supplementary reads are removed (default: %(default)s)")
+
     simple_count.add_argument("--debug", default = False, action = 'store_true', help = "Keep intermediate files")
 
     simple_count.set_defaults(func = simple_count_main)
