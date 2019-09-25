@@ -33,11 +33,11 @@ class TestMergeControl(unittest.TestCase):
         args = self.parser.parse_args(["merge_control", input_list_file, output_file])
         args.func(args)
 
-        print("output_file:", output_file, os.stat(output_file))
-        print("answer_file:", answer_file, os.stat(answer_file))
+        # print("output_file:", output_file, os.stat(output_file))
+        # print("answer_file:", answer_file, os.stat(answer_file))
         self.assertTrue(filecmp.cmp(output_file, answer_file, shallow=False))
 
-        # shutil.rmtree(tmp_dir)
+        shutil.rmtree(tmp_dir)
 
 if __name__ == "__main__":
     unittest.main()
